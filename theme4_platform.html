@@ -1,0 +1,1488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Theme 4: Experimental Research | EUR Psychology</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+:root{
+  --bg:#0f0e0c;--bg2:#1a1815;--bg3:#242220;
+  --gold:#c9a96e;--gold2:#e8c98e;--gold3:#8a6d3f;
+  --text:#e8e2d9;--text2:#a09880;--text3:#6a6055;
+  --red:#c96e6e;--green:#6ec98a;--blue:#6ea8c9;
+  --serif:'Cormorant Garamond',serif;
+  --sans:'DM Sans',sans-serif;
+}
+body{background:var(--bg);color:var(--text);font-family:var(--sans);display:flex;height:100vh;overflow:hidden}
+/* SIDEBAR */
+#sidebar{width:220px;min-width:220px;background:var(--bg2);border-right:1px solid #2a2820;display:flex;flex-direction:column;padding:24px 0}
+.sidebar-title{padding:0 20px 20px;border-bottom:1px solid #2a2820}
+.sidebar-title h1{font-family:var(--serif);font-size:1.1rem;color:var(--gold);font-weight:600;line-height:1.3}
+.sidebar-title p{font-size:.7rem;color:var(--text3);margin-top:4px;letter-spacing:.05em;text-transform:uppercase}
+.nav-item{display:flex;align-items:center;gap:12px;padding:14px 20px;cursor:pointer;transition:all .2s;border-left:3px solid transparent;font-size:.85rem;color:var(--text2)}
+.nav-item:hover{background:var(--bg3);color:var(--text);border-left-color:var(--gold3)}
+.nav-item.active{background:var(--bg3);color:var(--gold);border-left-color:var(--gold)}
+.nav-icon{font-size:1.1rem;width:20px;text-align:center}
+.nav-group{margin-top:24px}
+.nav-group-label{font-size:.65rem;color:var(--text3);padding:0 20px 8px;letter-spacing:.1em;text-transform:uppercase}
+/* MAIN */
+#main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.panel{display:none;height:100%;overflow-y:auto}
+.panel.active{display:flex;flex-direction:column}
+/* OVERVIEW */
+#overview{padding:40px}
+.overview-header{margin-bottom:40px}
+.overview-header h2{font-family:var(--serif);font-size:2.2rem;color:var(--gold);font-weight:600}
+.overview-header p{color:var(--text2);margin-top:8px;font-size:.9rem}
+.lesson-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:20px}
+.lesson-card{background:var(--bg2);border:1px solid #2a2820;border-radius:12px;padding:24px;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+.lesson-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--gold3),var(--gold))}
+.lesson-card:hover{border-color:var(--gold3);transform:translateY(-2px);background:var(--bg3)}
+.lesson-card:hover .lesson-arrow{opacity:1;transform:translateX(4px)}
+.lesson-num{font-size:.7rem;color:var(--gold3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:8px;font-family:var(--sans)}
+.lesson-card h3{font-family:var(--serif);font-size:1.15rem;color:var(--text);font-weight:600;line-height:1.4;margin-bottom:8px}
+.lesson-card p{font-size:.78rem;color:var(--text2);line-height:1.5}
+.lesson-arrow{color:var(--gold);font-size:.9rem;margin-top:12px;opacity:0;transition:all .2s;display:block}
+.topic-badge{display:inline-block;font-size:.65rem;padding:3px 8px;border-radius:20px;border:1px solid;margin-top:10px;letter-spacing:.05em}
+/* LESSONS */
+#lessons{padding:0}
+.lesson-nav{display:flex;align-items:center;gap:0;background:var(--bg2);border-bottom:1px solid #2a2820;padding:0 20px;overflow-x:auto;min-height:50px}
+.lesson-tab{padding:14px 16px;font-size:.78rem;color:var(--text3);cursor:pointer;white-space:nowrap;border-bottom:2px solid transparent;transition:all .2s}
+.lesson-tab:hover{color:var(--text2)}
+.lesson-tab.active{color:var(--gold);border-bottom-color:var(--gold)}
+.lesson-content{flex:1;display:none;overflow-y:auto}
+.lesson-content.active{display:flex;flex-direction:column}
+.lesson-inner{display:flex;flex:1;min-height:0}
+.lesson-diagram{flex:0 0 60%;padding:32px;display:flex;flex-direction:column;gap:16px;border-right:1px solid #2a2820}
+.lesson-diagram h2{font-family:var(--serif);font-size:1.7rem;color:var(--gold);font-weight:600}
+.lesson-diagram svg{width:100%;flex:1;max-height:480px}
+.lesson-sidebar{flex:1;padding:32px;display:flex;flex-direction:column;gap:20px;overflow-y:auto}
+.lesson-sidebar h3{font-family:var(--serif);font-size:1rem;color:var(--gold2);font-weight:600;letter-spacing:.03em}
+.bullets{list-style:none;display:flex;flex-direction:column;gap:10px}
+.bullets li{font-size:.83rem;line-height:1.6;color:var(--text2);padding-left:16px;position:relative}
+.bullets li::before{content:'◆';color:var(--gold3);font-size:.5rem;position:absolute;left:0;top:5px}
+.bullets li strong{color:var(--text)}
+.memory-hook{background:linear-gradient(135deg,#1e1c18,#242018);border:1px solid var(--gold3);border-radius:10px;padding:16px;margin-top:auto}
+.memory-hook .label{font-size:.65rem;color:var(--gold3);letter-spacing:.12em;text-transform:uppercase;margin-bottom:6px}
+.memory-hook p{font-size:.82rem;color:var(--text2);line-height:1.5;font-style:italic}
+.exam-flag{background:#1e1515;border:1px solid #4a2020;border-radius:8px;padding:12px;font-size:.78rem;color:#e8a0a0;display:flex;gap:8px;align-items:flex-start}
+.exam-flag .flag-icon{font-size:.9rem;flex-shrink:0;margin-top:1px}
+/* FLASHCARDS */
+#flashcards{padding:32px}
+.fc-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:24px;flex-wrap:gap}
+.fc-header h2{font-family:var(--serif);font-size:1.8rem;color:var(--gold)}
+.fc-controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:10px}
+.fc-filter{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:24px}
+.filter-btn{padding:6px 14px;border-radius:20px;border:1px solid #2a2820;background:var(--bg2);color:var(--text2);font-size:.75rem;cursor:pointer;transition:all .2s;font-family:var(--sans)}
+.filter-btn:hover{border-color:var(--gold3);color:var(--text)}
+.filter-btn.active{background:var(--gold3);border-color:var(--gold3);color:var(--bg)}
+.btn{padding:8px 18px;border-radius:8px;border:1px solid var(--gold3);background:transparent;color:var(--gold);font-size:.8rem;cursor:pointer;transition:all .2s;font-family:var(--sans)}
+.btn:hover{background:var(--gold3);color:var(--bg)}
+.btn-primary{background:var(--gold3);color:var(--bg)}
+.btn-primary:hover{background:var(--gold);border-color:var(--gold)}
+.fc-counter{font-size:.8rem;color:var(--text3)}
+.fc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:20px}
+.fc-wrap{perspective:1000px;height:180px;cursor:pointer}
+.fc-inner{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.fc-wrap.flipped .fc-inner{transform:rotateY(180deg)}
+.fc-front,.fc-back{position:absolute;width:100%;height:100%;backface-visibility:hidden;border-radius:12px;padding:20px;display:flex;flex-direction:column;justify-content:center}
+.fc-front{background:var(--bg2);border:1px solid #2a2820}
+.fc-back{background:var(--bg3);border:1px solid var(--gold3);transform:rotateY(180deg)}
+.fc-front::before{content:'Q';position:absolute;top:12px;right:14px;font-size:.65rem;color:var(--text3);letter-spacing:.1em}
+.fc-back::before{content:'A';position:absolute;top:12px;right:14px;font-size:.65rem;color:var(--gold3);letter-spacing:.1em}
+.fc-front p{font-family:var(--serif);font-size:1rem;color:var(--text);line-height:1.5;text-align:center}
+.fc-back p{font-size:.85rem;color:var(--text2);line-height:1.55;text-align:center}
+.fc-topic{font-size:.65rem;color:var(--gold3);letter-spacing:.08em;text-transform:uppercase;margin-bottom:8px}
+/* MCQ */
+#mcq{padding:32px}
+.mcq-header{margin-bottom:28px}
+.mcq-header h2{font-family:var(--serif);font-size:1.8rem;color:var(--gold)}
+.mcq-header p{color:var(--text2);font-size:.85rem;margin-top:6px}
+.mcq-progress{display:flex;gap:4px;flex-wrap:wrap;margin-bottom:28px}
+.prog-dot{width:10px;height:10px;border-radius:50%;background:var(--bg3);border:1px solid #2a2820;transition:all .2s;cursor:pointer}
+.prog-dot.correct{background:var(--green);border-color:var(--green)}
+.prog-dot.wrong{background:var(--red);border-color:var(--red)}
+.prog-dot.current{border-color:var(--gold);background:var(--gold3)}
+.mcq-card{background:var(--bg2);border:1px solid #2a2820;border-radius:14px;padding:32px;max-width:780px}
+.mcq-num{font-size:.7rem;color:var(--text3);letter-spacing:.1em;text-transform:uppercase;margin-bottom:12px}
+.mcq-q{font-family:var(--serif);font-size:1.3rem;color:var(--text);line-height:1.5;margin-bottom:24px;font-weight:600}
+.mcq-options{display:flex;flex-direction:column;gap:10px;margin-bottom:20px}
+.mcq-opt{display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:10px;border:1px solid #2a2820;cursor:pointer;transition:all .2s;background:var(--bg3)}
+.mcq-opt:hover:not(.answered){border-color:var(--gold3);background:#1e1c18}
+.mcq-opt.correct{border-color:var(--green);background:#0e1e12}
+.mcq-opt.wrong{border-color:var(--red);background:#1e0e0e}
+.mcq-opt.show-correct{border-color:var(--green);background:#0e1e12}
+.opt-letter{width:24px;height:24px;border-radius:6px;background:var(--bg2);border:1px solid #3a3830;display:flex;align-items:center;justify-content:center;font-size:.75rem;color:var(--text3);flex-shrink:0;font-weight:600;transition:all .2s}
+.mcq-opt.correct .opt-letter{background:var(--green);border-color:var(--green);color:#0a2010}
+.mcq-opt.wrong .opt-letter{background:var(--red);border-color:var(--red);color:#200a0a}
+.mcq-opt.show-correct .opt-letter{background:var(--green);border-color:var(--green);color:#0a2010}
+.opt-text{font-size:.87rem;color:var(--text2);line-height:1.5}
+.mcq-feedback{display:none;padding:16px;border-radius:10px;font-size:.85rem;line-height:1.6;margin-bottom:20px}
+.mcq-feedback.correct-fb{background:#0e1e12;border:1px solid var(--green);color:#a0e8b0}
+.mcq-feedback.wrong-fb{background:#1e0e0e;border:1px solid var(--red);color:#e8a0a0}
+.mcq-feedback.show{display:block}
+.mcq-nav{display:flex;gap:12px;align-items:center}
+.mcq-score{background:var(--bg3);border-radius:10px;padding:20px;text-align:center;display:none;max-width:400px;margin:20px auto}
+.mcq-score h3{font-family:var(--serif);font-size:1.5rem;color:var(--gold);margin-bottom:8px}
+.score-num{font-size:2.5rem;font-weight:600;color:var(--gold2);font-family:var(--serif)}
+/* SVG styles */
+.svg-label{font-family:'DM Sans',sans-serif;font-size:13px;fill:#e8e2d9}
+.svg-small{font-family:'DM Sans',sans-serif;font-size:11px;fill:#a09880}
+.svg-gold{font-family:'Cormorant Garamond',serif;font-size:15px;fill:#c9a96e;font-weight:600}
+.svg-title{font-family:'Cormorant Garamond',serif;font-size:17px;fill:#e8c98e;font-weight:600}
+.svg-note{font-family:'DM Sans',sans-serif;font-size:10px;fill:#6a6055}
+/* scrollbar */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--gold3);border-radius:3px}
+/* misc */
+.divider{height:1px;background:#2a2820;margin:16px 0}
+.tag{display:inline-block;font-size:.65rem;padding:2px 8px;border-radius:20px;background:var(--bg3);border:1px solid #3a3820;color:var(--gold3);margin-bottom:10px}
+@media(max-width:900px){
+  .lesson-inner{flex-direction:column}
+  .lesson-diagram{flex:none;border-right:none;border-bottom:1px solid #2a2820}
+  .lesson-diagram svg{max-height:320px}
+}
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sidebar-title">
+    <h1>Theme 4</h1>
+    <p>Experimental Research</p>
+  </div>
+  <div class="nav-group">
+    <div class="nav-group-label">Panels</div>
+    <div class="nav-item active" onclick="showPanel('overview')">
+      <span class="nav-icon">🗺</span> Overview
+    </div>
+    <div class="nav-item" onclick="showPanel('lessons')">
+      <span class="nav-icon">📐</span> Lessons
+    </div>
+    <div class="nav-item" onclick="showPanel('flashcards')">
+      <span class="nav-icon">🃏</span> Flashcards
+    </div>
+    <div class="nav-item" onclick="showPanel('mcq')">
+      <span class="nav-icon">✍️</span> MCQ Practice
+    </div>
+  </div>
+  <div style="margin-top:auto;padding:20px 20px 0;border-top:1px solid #2a2820;margin-top:20px">
+    <div style="font-size:.7rem;color:var(--text3);line-height:1.6">
+      📚 Moore et al. Ch.3<br>
+      📚 Davey Ch.8<br>
+      <span style="color:var(--gold3)">⚠ except capture-recapture</span>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- ============ OVERVIEW ============ -->
+<div id="overview" class="panel active">
+  <div class="overview-header">
+    <h2>Experimental Research</h2>
+    <p>12 lessons · 32 flashcards · 20 MCQ questions — Click a lesson to start</p>
+  </div>
+  <div class="lesson-grid">
+    <!-- cards generated by JS -->
+  </div>
+</div>
+
+<!-- ============ LESSONS ============ -->
+<div id="lessons" class="panel">
+  <div class="lesson-nav" id="lessonNav"></div>
+  <div id="lessonContents"></div>
+</div>
+
+<!-- ============ FLASHCARDS ============ -->
+<div id="flashcards" class="panel">
+  <div style="display:flex;align-items:flex-start;justify-content:space-between;flex-wrap:wrap;gap:16px;margin-bottom:8px">
+    <div>
+      <h2 style="font-family:var(--serif);font-size:1.8rem;color:var(--gold)">Flashcards</h2>
+      <p style="color:var(--text2);font-size:.85rem;margin-top:4px">Click a card to reveal. 32 cards total.</p>
+    </div>
+    <div style="display:flex;gap:10px">
+      <button class="btn" onclick="shuffleCards()">🔀 Shuffle</button>
+      <button class="btn" onclick="resetCards()">↺ Reset</button>
+    </div>
+  </div>
+  <div class="fc-filter" id="fcFilter"></div>
+  <div class="fc-counter" id="fcCounter"></div>
+  <div class="fc-grid" id="fcGrid" style="margin-top:16px"></div>
+</div>
+
+<!-- ============ MCQ ============ -->
+<div id="mcq" class="panel">
+  <div class="mcq-header">
+    <h2>MCQ Practice</h2>
+    <p>20 exam-style questions with immediate feedback and explanations</p>
+  </div>
+  <div class="mcq-progress" id="mcqProgress"></div>
+  <div id="mcqArea"></div>
+  <div class="mcq-score" id="mcqScore">
+    <h3>Quiz Complete!</h3>
+    <div class="score-num" id="scoreFinal"></div>
+    <p style="color:var(--text2);font-size:.85rem;margin-top:8px">questions answered correctly</p>
+    <button class="btn btn-primary" style="margin-top:16px" onclick="restartMCQ()">Restart Quiz</button>
+  </div>
+</div>
+
+</div><!-- /main -->
+
+<script>
+// ==================== LESSON DATA ====================
+const lessons = [
+  {
+    id:0, num:'01',
+    title:'Building Blocks of Experiments',
+    subtitle:'Units · Factors · Levels · Treatments · Outcomes',
+    topic:'Core Concepts',
+    topicColor:'#3a5530',
+    bullets:[
+      '<strong>Experimental unit</strong> — the entity to which a treatment is applied (called a <em>subject</em> when human)',
+      '<strong>Factor</strong> — the independent variable you manipulate (what you change on purpose)',
+      '<strong>Levels</strong> — the distinct values/categories of a factor (e.g. 2h, 4h, 6h sleep)',
+      '<strong>Treatment</strong> — the specific experimental condition applied to a unit (combination of levels)',
+      '<strong>Outcome</strong> — the dependent variable you measure to detect effects of the treatment'
+    ],
+    hook:'📌 <strong>FLTOU chain:</strong> <em>Factor has Levels → pick a Treatment → assign to a Unit → measure the Outcome.</em>',
+    exam:'Exam trap: "I measured blood pressure" = blood pressure is the <strong>outcome/DV</strong>, not the experimental unit. The <em>person</em> whose blood pressure is measured is the experimental unit.',
+    svg:`<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arr" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c9a96e" opacity=".8"/></marker></defs>
+  <!-- boxes -->
+  <rect x="20" y="170" width="110" height="60" rx="10" fill="#1e1c18" stroke="#c9a96e" stroke-width="1.5"/>
+  <text x="75" y="196" text-anchor="middle" class="svg-gold" font-size="14">Factor</text>
+  <text x="75" y="214" text-anchor="middle" class="svg-small">(Independent Var)</text>
+
+  <rect x="185" y="150" width="110" height="100" rx="10" fill="#1e1c18" stroke="#8a6d3f" stroke-width="1.2"/>
+  <text x="240" y="185" text-anchor="middle" class="svg-label" font-size="13">Levels</text>
+  <text x="240" y="204" text-anchor="middle" class="svg-small">Level A</text>
+  <text x="240" y="220" text-anchor="middle" class="svg-small">Level B</text>
+  <text x="240" y="236" text-anchor="middle" class="svg-small">Level C…</text>
+
+  <rect x="355" y="140" width="120" height="120" rx="10" fill="#1e1c18" stroke="#8a6d3f" stroke-width="1.2"/>
+  <text x="415" y="175" text-anchor="middle" class="svg-label" font-size="13">Treatments</text>
+  <text x="415" y="196" text-anchor="middle" class="svg-small">Condition 1</text>
+  <text x="415" y="212" text-anchor="middle" class="svg-small">Condition 2</text>
+  <text x="415" y="228" text-anchor="middle" class="svg-small">Condition 3…</text>
+  <text x="415" y="248" text-anchor="middle" class="svg-note">"what's applied"</text>
+
+  <rect x="540" y="160" width="130" height="80" rx="10" fill="#1e1c18" stroke="#6e9c6e" stroke-width="1.5"/>
+  <text x="605" y="188" text-anchor="middle" class="svg-label" font-size="13">Outcome/DV</text>
+  <text x="605" y="208" text-anchor="middle" class="svg-small">Measured on each</text>
+  <text x="605" y="224" text-anchor="middle" class="svg-small">experimental unit</text>
+
+  <!-- arrows -->
+  <line x1="130" y1="200" x2="182" y2="200" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="295" y1="200" x2="352" y2="200" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="475" y1="200" x2="537" y2="200" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- experimental units pool below -->
+  <rect x="355" y="305" width="120" height="50" rx="8" fill="#1e1c18" stroke="#5a5045" stroke-width="1"/>
+  <text x="415" y="326" text-anchor="middle" class="svg-label" font-size="12">Experimental</text>
+  <text x="415" y="342" text-anchor="middle" class="svg-label" font-size="12">Units (Subjects)</text>
+
+  <!-- dashed line from treatments to units -->
+  <line x1="415" y1="262" x2="415" y2="303" stroke="#5a5045" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="438" y="288" class="svg-note">applied to</text>
+
+  <!-- example block top -->
+  <rect x="30" y="30" width="640" height="80" rx="10" fill="#181614" stroke="#2a2820" stroke-width="1"/>
+  <text x="350" y="52" text-anchor="middle" class="svg-title">Example: Sleep Study</text>
+  <text x="350" y="74" text-anchor="middle" class="svg-small">Factor = sleep duration | Levels = 6h / 8h | Treatments = assigned to 6h or 8h condition</text>
+  <text x="350" y="92" text-anchor="middle" class="svg-small">Experimental Unit = each student | Outcome = exam score next morning</text>
+</svg>`
+  },
+  {
+    id:1, num:'02',
+    title:'Comparative Experiments & Placebo',
+    subtitle:'Control group · Placebo effect · Blind design',
+    topic:'Core Concepts',
+    topicColor:'#3a5530',
+    bullets:[
+      'A <strong>comparative experiment</strong> compares a treatment group with a control group (receives no treatment / placebo)',
+      '<strong>Placebo effect</strong> (VERY IMPORTANT): people may improve simply because they <em>believe</em> they received treatment — even without active treatment',
+      'Control group = receives placebo or nothing; experimental group = receives the real treatment',
+      'You compare <em>"treatment WITH"</em> vs <em>"treatment WITHOUT"</em> — the effect is the difference',
+      '<strong>Blinding</strong>: single-blind = subjects don\'t know their group; double-blind = neither subjects nor researchers know'
+    ],
+    hook:'📌 <em>Placebo = "sugar pill that works by magic."</em> The mind can produce real physiological change just from expectation.',
+    exam:'Exam key: A placebo is NOT "nothing." It is an inert substitute that looks identical to the treatment — so subjects cannot tell which group they are in.',
+    svg:`<svg viewBox="0 0 700 420" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arr2" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c9a96e" opacity=".8"/></marker></defs>
+  <!-- Pool -->
+  <rect x="275" y="30" width="150" height="55" rx="10" fill="#1e1c18" stroke="#c9a96e" stroke-width="1.5"/>
+  <text x="350" y="55" text-anchor="middle" class="svg-gold" font-size="14">Participants</text>
+  <text x="350" y="73" text-anchor="middle" class="svg-small">Pool of subjects</text>
+
+  <!-- Randomize diamond -->
+  <polygon points="350,108 390,135 350,162 310,135" fill="#242018" stroke="#8a6d3f" stroke-width="1.5"/>
+  <text x="350" y="131" text-anchor="middle" class="svg-small">Random</text>
+  <text x="350" y="147" text-anchor="middle" class="svg-small">Assign</text>
+
+  <!-- arrows from pool to diamond -->
+  <line x1="350" y1="86" x2="350" y2="105" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+  <!-- experimental group -->
+  <rect x="100" y="185" width="150" height="65" rx="10" fill="#1e1c18" stroke="#6e9c6e" stroke-width="1.5"/>
+  <text x="175" y="211" text-anchor="middle" class="svg-label" font-size="13">Experimental</text>
+  <text x="175" y="229" text-anchor="middle" class="svg-label" font-size="13">Group</text>
+  <text x="175" y="243" text-anchor="middle" class="svg-small">Receives treatment</text>
+
+  <!-- control group -->
+  <rect x="450" y="185" width="150" height="65" rx="10" fill="#1e1c18" stroke="#6e8c9c" stroke-width="1.5"/>
+  <text x="525" y="211" text-anchor="middle" class="svg-label" font-size="13">Control</text>
+  <text x="525" y="229" text-anchor="middle" class="svg-label" font-size="13">Group</text>
+  <text x="525" y="243" text-anchor="middle" class="svg-small">Receives placebo / nothing</text>
+
+  <!-- arrows from diamond to groups -->
+  <line x1="312" y1="147" x2="215" y2="183" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr2)"/>
+  <line x1="388" y1="147" x2="488" y2="183" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr2)"/>
+
+  <!-- outcomes -->
+  <rect x="100" y="290" width="150" height="50" rx="8" fill="#1a2018" stroke="#3a5530" stroke-width="1"/>
+  <text x="175" y="313" text-anchor="middle" class="svg-small">Measure Outcome</text>
+  <text x="175" y="328" text-anchor="middle" class="svg-small">e.g. pain level</text>
+
+  <rect x="450" y="290" width="150" height="50" rx="8" fill="#181a20" stroke="#304050" stroke-width="1"/>
+  <text x="525" y="313" text-anchor="middle" class="svg-small">Measure Outcome</text>
+  <text x="525" y="328" text-anchor="middle" class="svg-small">e.g. pain level</text>
+
+  <line x1="175" y1="252" x2="175" y2="288" stroke="#6e9c6e" stroke-width="1" marker-end="url(#arr2)"/>
+  <line x1="525" y1="252" x2="525" y2="288" stroke="#6e8c9c" stroke-width="1" marker-end="url(#arr2)"/>
+
+  <!-- compare -->
+  <rect x="250" y="362" width="200" height="40" rx="8" fill="#242018" stroke="#c9a96e" stroke-width="1.5"/>
+  <text x="350" y="387" text-anchor="middle" class="svg-gold" font-size="14">COMPARE Results</text>
+  <line x1="175" y1="340" x2="270" y2="362" stroke="#3a5530" stroke-width="1" stroke-dasharray="4,3"/>
+  <line x1="525" y1="340" x2="430" y2="362" stroke="#304050" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Placebo effect callout -->
+  <rect x="20" y="290" width="68" height="70" rx="6" fill="#1e1518" stroke="#4a2828" stroke-width="1"/>
+  <text x="54" y="310" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#e8a0a0">Placebo</text>
+  <text x="54" y="322" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#e8a0a0">Effect!</text>
+  <text x="54" y="334" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#a07070">Belief alone</text>
+  <text x="54" y="345" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#a07070">can cause</text>
+  <text x="54" y="356" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#a07070">real change</text>
+  <line x1="88" y1="325" x2="100" y2="325" stroke="#4a2828" stroke-width="1" stroke-dasharray="3,2"/>
+</svg>`
+  },
+  {
+    id:2, num:'03',
+    title:'Experimental Control',
+    subtitle:'Extraneous variables · Confounding · Control',
+    topic:'Core Concepts',
+    topicColor:'#3a5530',
+    bullets:[
+      '<strong>Experimental control</strong>: keep everything constant EXCEPT the variable you are deliberately changing',
+      '<strong>Extraneous variable</strong> (VERY IMPORTANT): any variable not central to the research question that could influence the DV if not controlled',
+      '<strong>Confounding variable</strong>: an extraneous variable that varies <em>systematically</em> with the IV — making it impossible to determine the true cause of change',
+      'Control means: decide what to measure, decide what to change, keep everything else constant',
+      'If you observe a change in the outcome, control lets you <em>attribute</em> that change to the IV'
+    ],
+    hook:'📌 <em>Extraneous = "background noise." Confounding = "background noise that disguises itself as your signal."</em>',
+    exam:'Exam critical: Confounding variable is a TYPE of extraneous variable — one that varies WITH the IV. Not all extraneous variables are confounds.',
+    svg:`<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arr3" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c9a96e" opacity=".8"/></marker>
+  <marker id="arr3r" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c96e6e" opacity=".8"/></marker></defs>
+
+  <!-- IV box -->
+  <rect x="60" y="170" width="140" height="60" rx="10" fill="#1e1c18" stroke="#c9a96e" stroke-width="1.5"/>
+  <text x="130" y="195" text-anchor="middle" class="svg-gold" font-size="13">Independent</text>
+  <text x="130" y="213" text-anchor="middle" class="svg-gold" font-size="13">Variable (IV)</text>
+
+  <!-- arrow IV -> DV -->
+  <line x1="200" y1="200" x2="490" y2="200" stroke="#c9a96e" stroke-width="2" marker-end="url(#arr3)"/>
+  <text x="345" y="190" text-anchor="middle" class="svg-small">intended causal path</text>
+
+  <!-- DV box -->
+  <rect x="492" y="170" width="140" height="60" rx="10" fill="#1e1c18" stroke="#6e9c6e" stroke-width="1.5"/>
+  <text x="562" y="195" text-anchor="middle" class="svg-label" font-size="13">Dependent</text>
+  <text x="562" y="213" text-anchor="middle" class="svg-label" font-size="13">Variable (DV)</text>
+
+  <!-- Extraneous box -->
+  <rect x="250" y="50" width="200" height="55" rx="10" fill="#1e1c18" stroke="#5a5045" stroke-width="1"/>
+  <text x="350" y="74" text-anchor="middle" class="svg-label" font-size="12">Extraneous Variable</text>
+  <text x="350" y="93" text-anchor="middle" class="svg-note">e.g. noise in room, time of day</text>
+
+  <!-- Confounding box - overlaps path -->
+  <rect x="260" y="270" width="180" height="70" rx="10" fill="#1e1518" stroke="#c96e6e" stroke-width="1.5"/>
+  <text x="350" y="296" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:14px;fill:#e89090;font-weight:600">Confounding</text>
+  <text x="350" y="314" text-anchor="middle" style="font-family:'DM Sans';font-size:11px;fill:#a07070">Variable</text>
+  <text x="350" y="330" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#806060">systematically varies with IV</text>
+
+  <!-- Extraneous -> DV (weak) -->
+  <line x1="350" y1="105" x2="520" y2="168" stroke="#5a5045" stroke-width="1" stroke-dasharray="5,3" marker-end="url(#arr3)"/>
+  <text x="460" y="128" class="svg-note">random influence</text>
+
+  <!-- Confounding -> IV and -> DV (the problem) -->
+  <line x1="262" y1="295" x2="200" y2="225" stroke="#c96e6e" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr3r)"/>
+  <line x1="440" y1="295" x2="510" y2="232" stroke="#c96e6e" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr3r)"/>
+  <text x="220" y="270" class="svg-note" style="fill:#a07070">varies WITH</text>
+  <text x="450" y="270" class="svg-note" style="fill:#a07070">also affects</text>
+
+  <!-- Controlled area -->
+  <rect x="55" y="145" width="590" height="115" rx="12" fill="none" stroke="#3a3820" stroke-width="1" stroke-dasharray="6,3"/>
+  <text x="76" y="162" class="svg-note" style="fill:#4a4830">← Experimental Control Zone: keep everything else constant →</text>
+
+  <!-- legend -->
+  <rect x="20" y="350" width="660" height="36" rx="6" fill="#181614"/>
+  <line x1="36" y1="368" x2="60" y2="368" stroke="#c9a96e" stroke-width="2"/>
+  <text x="66" y="372" class="svg-note" style="fill:#a09880">Intended causal path</text>
+  <line x1="190" y1="368" x2="214" y2="368" stroke="#c96e6e" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <text x="220" y="372" class="svg-note" style="fill:#a07070">Confounding path (problematic!)</text>
+  <line x1="430" y1="368" x2="454" y2="368" stroke="#5a5045" stroke-width="1" stroke-dasharray="5,3"/>
+  <text x="460" y="372" class="svg-note" style="fill:#6a6055">Extraneous (random noise)</text>
+</svg>`
+  },
+  {
+    id:3, num:'04',
+    title:'Randomization',
+    subtitle:'Why chance works · Random digits table (EXAM STANDARD)',
+    topic:'Randomization',
+    topicColor:'#30404a',
+    bullets:[
+      '<strong>Randomization</strong>: using a chance mechanism to assign experimental units to groups — no human choice, no intuition',
+      'Balances <em>both known AND unknown</em> confounding variables across groups on average — this is why it\'s stronger than matching alone',
+      '<strong>Random digits table</strong> (exam standard): each digit 0–9 has equal probability; no pattern; generated by a statistical process',
+      '<strong>How to use</strong>: number all units → choose a random start point in the table → read digits → assign units in that order',
+      'NOT random: "I just picked some people", "I chose every 5th person", "I assigned friends together"'
+    ],
+    hook:'📌 <em>Randomization is "fair" like drawing from a hat — every unit has equal chance of being in any group. Chance decides, not researcher bias.</em>',
+    exam:'Exam trap: Forgetting to STOP once you reach the required sample size. Also: must use digits that represent valid unit numbers only.',
+    svg:`<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arr4" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c9a96e" opacity=".8"/></marker></defs>
+
+  <!-- Title -->
+  <text x="350" y="28" text-anchor="middle" class="svg-title">How Randomization Works</text>
+
+  <!-- Step 1: Pool -->
+  <rect x="20" y="45" width="130" height="280" rx="10" fill="#1e1c18" stroke="#3a3820" stroke-width="1"/>
+  <text x="85" y="68" text-anchor="middle" class="svg-label" font-size="12">All Units</text>
+  <!-- person icons -->
+  <text x="85" y="98" text-anchor="middle" style="font-size:11px;fill:#a09880">001 • 002 • 003</text>
+  <text x="85" y="115" text-anchor="middle" style="font-size:11px;fill:#a09880">004 • 005 • 006</text>
+  <text x="85" y="132" text-anchor="middle" style="font-size:11px;fill:#a09880">007 • 008 • 009</text>
+  <text x="85" y="149" text-anchor="middle" style="font-size:11px;fill:#6a6055">010 • 011 • 012</text>
+  <text x="85" y="166" text-anchor="middle" style="font-size:11px;fill:#6a6055">... ... ...</text>
+  <text x="85" y="200" text-anchor="middle" style="font-size:10px;fill:#5a5045">N = 900 units</text>
+  <text x="85" y="218" text-anchor="middle" style="font-size:10px;fill:#5a5045">each gets a</text>
+  <text x="85" y="234" text-anchor="middle" style="font-size:10px;fill:#5a5045">unique number</text>
+
+  <!-- Dice/chance symbol -->
+  <rect x="185" y="148" width="90" height="90" rx="12" fill="#242018" stroke="#c9a96e" stroke-width="1.5"/>
+  <text x="230" y="180" text-anchor="middle" style="font-size:22px;fill:#c9a96e">🎲</text>
+  <text x="230" y="204" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">Random</text>
+  <text x="230" y="218" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">Digits Table</text>
+  <text x="230" y="232" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">or computer</text>
+
+  <!-- arrows from pool to dice, from dice to groups -->
+  <line x1="151" y1="190" x2="183" y2="192" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr4)"/>
+
+  <!-- Group A -->
+  <rect x="315" y="60" width="160" height="115" rx="10" fill="#1a2018" stroke="#6e9c6e" stroke-width="1.5"/>
+  <text x="395" y="85" text-anchor="middle" class="svg-label" font-size="13">Group A</text>
+  <text x="395" y="104" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">(Treatment)</text>
+  <text x="395" y="126" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#8aaa8a">003 • 017 • 042</text>
+  <text x="395" y="142" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#8aaa8a">056 • 089 • ...</text>
+  <text x="395" y="160" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#5a7055">n = randomly chosen</text>
+
+  <!-- Group B -->
+  <rect x="315" y="210" width="160" height="115" rx="10" fill="#18181e" stroke="#6e8c9c" stroke-width="1.5"/>
+  <text x="395" y="235" text-anchor="middle" class="svg-label" font-size="13">Group B</text>
+  <text x="395" y="254" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e8c9c">(Control)</text>
+  <text x="395" y="276" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#8a9aaa">001 • 011 • 033</text>
+  <text x="395" y="292" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#8a9aaa">067 • 090 • ...</text>
+  <text x="395" y="310" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#50607a">n = remainder</text>
+
+  <!-- arrows from dice to groups -->
+  <line x1="276" y1="175" x2="313" y2="120" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr4)"/>
+  <line x1="276" y1="197" x2="313" y2="255" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr4)"/>
+
+  <!-- Why it works -->
+  <rect x="500" y="45" width="185" height="300" rx="10" fill="#181614" stroke="#2a2820" stroke-width="1"/>
+  <text x="592" y="70" text-anchor="middle" class="svg-gold" font-size="13">Why It Works</text>
+  <line x1="520" y1="78" x2="665" y2="78" stroke="#2a2820" stroke-width="1"/>
+  <text x="592" y="100" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">✓ Balances KNOWN</text>
+  <text x="592" y="116" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">  confounders</text>
+  <text x="592" y="140" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">✓ Balances UNKNOWN</text>
+  <text x="592" y="156" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">  confounders</text>
+  <text x="592" y="180" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">✓ No selection bias</text>
+  <text x="592" y="200" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">✓ No human choice</text>
+  <text x="592" y="230" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">✗ "I just picked"</text>
+  <text x="592" y="250" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">✗ "Alternate assign"</text>
+  <text x="592" y="270" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">✗ "Friends together"</text>
+  <text x="592" y="300" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#5a5045">NOT random!</text>
+</svg>`
+  },
+  {
+    id:4, num:'05',
+    title:'Statistical Design Principles',
+    subtitle:'Compare · Randomize · Repeat · Control',
+    topic:'Design Principles',
+    topicColor:'#4a3540',
+    bullets:[
+      '<strong>Compare</strong> 2+ conditions — you need something to compare against, otherwise you can\'t detect an effect',
+      '<strong>Randomize</strong> assignment of units to conditions — prevents systematic bias and confounding',
+      '<strong>Repeat</strong> on many units — averaging out random variation; reduces influence of individual differences',
+      '<strong>Control</strong> extraneous influences — keep everything else constant so you know WHY something changed',
+      'The ideal: <strong>double-blind randomised controlled trial</strong> — neither participant nor researcher knows assignment'
+    ],
+    hook:'📌 <em>CRR+C: Compare, Randomize, Repeat, Control. A table with 4 legs — remove any one and it falls.</em>',
+    exam:'Normal human explanation: "I compared, assigned randomly so chance decides, repeated because one observation is unreliable, and controlled everything else so I know WHY."',
+    svg:`<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arr5" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c9a96e" opacity=".8"/></marker></defs>
+
+  <!-- 4 quadrant design -->
+  <rect x="30" y="50" width="300" height="130" rx="12" fill="#1a2018" stroke="#6e9c6e" stroke-width="1.5"/>
+  <text x="60" y="84" class="svg-gold" font-size="22">1</text>
+  <text x="90" y="84" class="svg-gold" font-size="16">COMPARE</text>
+  <text x="60" y="108" class="svg-small">Need 2+ conditions to detect effect</text>
+  <text x="60" y="126" class="svg-small">Experimental group vs. control group</text>
+  <text x="60" y="144" class="svg-small">Without comparison → can't know if</text>
+  <text x="60" y="162" class="svg-small">treatment caused the change</text>
+
+  <rect x="370" y="50" width="300" height="130" rx="12" fill="#242018" stroke="#c9a96e" stroke-width="1.5"/>
+  <text x="400" y="84" class="svg-gold" font-size="22">2</text>
+  <text x="430" y="84" class="svg-gold" font-size="16">RANDOMIZE</text>
+  <text x="400" y="108" class="svg-small">Use chance to assign to conditions</text>
+  <text x="400" y="126" class="svg-small">Balances known + unknown confounders</text>
+  <text x="400" y="144" class="svg-small">Prevents systematic selection bias</text>
+  <text x="400" y="162" class="svg-small">Each unit = equal probability of any group</text>
+
+  <rect x="30" y="210" width="300" height="130" rx="12" fill="#181820" stroke="#6e8c9c" stroke-width="1.5"/>
+  <text x="60" y="244" class="svg-gold" font-size="22">3</text>
+  <text x="90" y="244" class="svg-gold" font-size="16">REPEAT</text>
+  <text x="60" y="268" class="svg-small">Apply each condition to many units</text>
+  <text x="60" y="286" class="svg-small">Reduces influence of random variation</text>
+  <text x="60" y="304" class="svg-small">One data point is unreliable</text>
+  <text x="60" y="322" class="svg-small">More units → more trustworthy conclusions</text>
+
+  <rect x="370" y="210" width="300" height="130" rx="12" fill="#1e1a18" stroke="#9c8c6e" stroke-width="1.5"/>
+  <text x="400" y="244" class="svg-gold" font-size="22">4</text>
+  <text x="430" y="244" class="svg-gold" font-size="16">CONTROL</text>
+  <text x="400" y="268" class="svg-small">Keep extraneous variables constant</text>
+  <text x="400" y="286" class="svg-small">Decide what to change, what to measure</text>
+  <text x="400" y="304" class="svg-small">Allows causal attribution</text>
+  <text x="400" y="322" class="svg-small">→ "It changed BECAUSE of the treatment"</text>
+
+  <!-- center circle -->
+  <circle cx="350" cy="192" r="30" fill="#242018" stroke="#c9a96e" stroke-width="1.5"/>
+  <text x="350" y="188" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#c9a96e">VALID</text>
+  <text x="350" y="202" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#c9a96e">EXPERIMENT</text>
+
+  <!-- connecting lines to center -->
+  <line x1="330" y1="180" x2="303" y2="175" stroke="#3a3820" stroke-width="1"/>
+  <line x1="370" y1="180" x2="398" y2="175" stroke="#3a3820" stroke-width="1"/>
+  <line x1="330" y1="205" x2="303" y2="210" stroke="#3a3820" stroke-width="1"/>
+  <line x1="370" y1="205" x2="398" y2="210" stroke="#3a3820" stroke-width="1"/>
+</svg>`
+  },
+  {
+    id:5, num:'06',
+    title:'Between vs Within-Subjects Design',
+    subtitle:'VERY HIGH EXAM VALUE',
+    topic:'Research Design',
+    topicColor:'#403040',
+    bullets:[
+      '<strong>Between-subjects</strong>: each participant takes part in ONE condition only — different people in different conditions',
+      '<strong>Within-subjects</strong>: each participant takes part in ALL conditions — same person gets every treatment',
+      'Within-subjects <strong>advantage</strong>: fewer participants needed; eliminates individual differences between groups',
+      'Within-subjects <strong>disadvantage</strong>: order effects (practice, fatigue, carryover, sensitization) threaten internal validity',
+      'Between-subjects <strong>disadvantage</strong>: need more participants; groups may differ due to individual variation'
+    ],
+    hook:'📌 <em>Between = "different people for each scene." Within = "same actor plays every role."</em>',
+    exam:'EXAM CRITICAL: Order effects ONLY occur in within-subjects designs! Between-subjects has no order effects because each person sees only ONE condition.',
+    svg:`<svg viewBox="0 0 700 390" xmlns="http://www.w3.org/2000/svg">
+  <!-- Between-subjects side -->
+  <rect x="20" y="40" width="315" height="320" rx="12" fill="#181618" stroke="#6e8c9c" stroke-width="1.5"/>
+  <text x="178" y="70" text-anchor="middle" class="svg-title" style="fill:#6ea8c9">BETWEEN-SUBJECTS</text>
+  <text x="178" y="88" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#5a7080">Different people → different conditions</text>
+
+  <!-- Group A -->
+  <rect x="40" y="100" width="130" height="90" rx="8" fill="#1a1e24" stroke="#4a6878" stroke-width="1"/>
+  <text x="105" y="122" text-anchor="middle" style="font-family:'DM Sans';font-size:11px;fill:#6ea8c9">Group A</text>
+  <text x="105" y="140" text-anchor="middle" style="font-size:18px">👤👤👤</text>
+  <text x="105" y="165" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#8aaabb">Only see</text>
+  <text x="105" y="179" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">Condition A</text>
+
+  <rect x="185" y="100" width="130" height="90" rx="8" fill="#1a1e24" stroke="#4a6878" stroke-width="1"/>
+  <text x="250" y="122" text-anchor="middle" style="font-family:'DM Sans';font-size:11px;fill:#6ea8c9">Group B</text>
+  <text x="250" y="140" text-anchor="middle" style="font-size:18px">👤👤👤</text>
+  <text x="250" y="165" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#8aaabb">Only see</text>
+  <text x="250" y="179" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">Condition B</text>
+
+  <!-- pros/cons between -->
+  <text x="40" y="218" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">✓ No order effects possible</text>
+  <text x="40" y="236" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">✓ Conditions don't contaminate</text>
+  <text x="40" y="260" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">✗ Need MORE participants</text>
+  <text x="40" y="278" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">✗ Groups may differ naturally</text>
+  <text x="40" y="296" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">✗ Harder to control extraneous vars</text>
+  <text x="40" y="340" style="font-family:'DM Sans';font-size:9px;fill:#5a7080">e.g. caffeine study &amp; attention:</text>
+  <text x="40" y="354" style="font-family:'DM Sans';font-size:9px;fill:#5a7080">Group A = caffeine, Group B = no caffeine</text>
+
+  <!-- Within-subjects side -->
+  <rect x="365" y="40" width="315" height="320" rx="12" fill="#1c1618" stroke="#9c7c6e" stroke-width="1.5"/>
+  <text x="522" y="70" text-anchor="middle" class="svg-title" style="fill:#c9a96e">WITHIN-SUBJECTS</text>
+  <text x="522" y="88" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#7a6858">Same people → all conditions</text>
+
+  <!-- Same person, multiple conditions -->
+  <rect x="430" y="100" width="175" height="90" rx="8" fill="#221e18" stroke="#6a5838" stroke-width="1"/>
+  <text x="518" y="122" text-anchor="middle" style="font-family:'DM Sans';font-size:11px;fill:#c9a96e">Same Participants</text>
+  <text x="518" y="140" text-anchor="middle" style="font-size:18px">👤👤👤</text>
+  <text x="518" y="162" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">See ALL conditions:</text>
+  <text x="518" y="178" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c9a96e">A → B → C → ...</text>
+
+  <!-- pros/cons within -->
+  <text x="385" y="218" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">✓ Fewer participants needed</text>
+  <text x="385" y="236" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">✓ Controls individual differences</text>
+  <text x="385" y="254" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">✓ Each person = own baseline</text>
+  <text x="385" y="278" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">✗ ORDER EFFECTS (practice,</text>
+  <text x="385" y="294" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">  fatigue, carryover, sensitization)</text>
+  <text x="385" y="312" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">✗ Can't reverse some conditions</text>
+
+  <text x="385" y="340" style="font-family:'DM Sans';font-size:9px;fill:#7a6858">e.g. same person takes caffeine then</text>
+  <text x="385" y="354" style="font-family:'DM Sans';font-size:9px;fill:#7a6858">no-caffeine (or counterbalanced)</text>
+
+  <!-- VS divider -->
+  <text x="350" y="205" text-anchor="middle" class="svg-gold" font-size="18" font-style="italic">vs</text>
+</svg>`
+  },
+  {
+    id:6, num:'07',
+    title:'Order Effects & Counterbalancing',
+    subtitle:'Practice · Fatigue · Carryover · Sensitization',
+    topic:'Research Design',
+    topicColor:'#403040',
+    bullets:[
+      '<strong>Practice effect</strong>: performance improves later due to learning — not due to the treatment',
+      '<strong>Fatigue effect</strong>: performance worsens later due to tiredness/boredom — not due to treatment',
+      '<strong>Carryover effect</strong>: earlier condition influences response to later condition (e.g. sweetness judgement after drinking something sweet)',
+      '<strong>Sensitization</strong>: participants become more aware/sensitive to the study purpose over time',
+      '<strong>Counterbalancing</strong>: distributing conditions across all possible orders so order effects balance out across conditions'
+    ],
+    hook:'📌 <em>PFCS: Practice (gets better), Fatigue (gets worse), Carryover (bleeds through), Sensitization (gets cleverer).</em>',
+    exam:'Counterbalancing does NOT eliminate order effects for individuals — it only controls for them across the group on average. It spreads order effects equally.',
+    svg:`<svg viewBox="0 0 700 400" xmlns="http://www.w3.org/2000/svg">
+  <!-- timeline -->
+  <text x="350" y="30" text-anchor="middle" class="svg-title">Order Effects in Within-Subjects Design</text>
+  
+  <!-- Horizontal timeline -->
+  <line x1="60" y1="100" x2="640" y2="100" stroke="#3a3820" stroke-width="2"/>
+  <text x="60" y="92" class="svg-note">Time 1</text>
+  <text x="250" y="92" class="svg-note">Time 2</text>
+  <text x="440" y="92" class="svg-note">Time 3</text>
+  <text x="620" y="92" class="svg-note">Time 4</text>
+
+  <!-- Condition markers on timeline -->
+  <circle cx="100" cy="100" r="6" fill="#c9a96e"/>
+  <circle cx="290" cy="100" r="6" fill="#c9a96e"/>
+  <circle cx="480" cy="100" r="6" fill="#c9a96e"/>
+  <circle cx="630" cy="100" r="6" fill="#c9a96e" opacity=".5"/>
+
+  <!-- Condition labels -->
+  <rect x="70" y="108" width="60" height="22" rx="4" fill="#1e1c18" stroke="#4a4830" stroke-width="1"/>
+  <text x="100" y="124" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c9a96e">Condition A</text>
+  <rect x="260" y="108" width="60" height="22" rx="4" fill="#1e1c18" stroke="#4a4830" stroke-width="1"/>
+  <text x="290" y="124" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c9a96e">Condition B</text>
+  <rect x="450" y="108" width="60" height="22" rx="4" fill="#1e1c18" stroke="#4a4830" stroke-width="1"/>
+  <text x="480" y="124" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c9a96e">Condition C</text>
+
+  <!-- Practice effect curve (going up) -->
+  <path d="M 100,260 Q 200,220 290,200 Q 385,185 480,182" fill="none" stroke="#6e9c6e" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="580" y="186" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">Practice ↑</text>
+  <text x="580" y="198" style="font-family:'DM Sans';font-size:9px;fill:#4a7055">improves w/ time</text>
+
+  <!-- Fatigue effect curve (going down) -->
+  <path d="M 100,270 Q 200,280 290,295 Q 385,312 480,330" fill="none" stroke="#c96e6e" stroke-width="2" stroke-dasharray="6,3"/>
+  <text x="490" y="338" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">Fatigue ↓</text>
+  <text x="490" y="350" style="font-family:'DM Sans';font-size:9px;fill:#7a4a4a">worsens w/ time</text>
+
+  <!-- Carryover arrow -->
+  <path d="M 120,160 Q 200,150 280,155" fill="none" stroke="#9c8c6e" stroke-width="1.5" stroke-dasharray="4,3" marker-end="url(#arr4)"/>
+  <text x="155" y="148" style="font-family:'DM Sans';font-size:9px;fill:#9c8c6e">Carryover effect</text>
+  <text x="155" y="158" style="font-family:'DM Sans';font-size:8px;fill:#6a6055">(A bleeds into B)</text>
+
+  <!-- Y axis -->
+  <line x1="60" y1="150" x2="60" y2="350" stroke="#3a3820" stroke-width="1"/>
+  <text x="50" y="185" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#5a5045;transform:rotate(-90deg)" transform="rotate(-90,50,250)">Performance</text>
+
+  <!-- Counterbalancing box -->
+  <rect x="30" y="358" width="640" height="30" rx="6" fill="#1e2018" stroke="#3a5530" stroke-width="1"/>
+  <text x="350" y="374" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">SOLUTION → Counterbalancing: half get A→B, half get B→A. Order effects average out across conditions.</text>
+
+  <!-- Sensitization box -->
+  <rect x="500" y="155" width="150" height="55" rx="8" fill="#201c18" stroke="#5a4830" stroke-width="1"/>
+  <text x="575" y="175" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c9a96e">Sensitization</text>
+  <text x="575" y="191" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a09880">Participants become</text>
+  <text x="575" y="203" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a09880">aware of study aim</text>
+</svg>`
+  },
+  {
+    id:7, num:'08',
+    title:'Population, Sample & Sampling Methods',
+    subtitle:'SRS · Stratified · Multistage · Voluntary Response',
+    topic:'Sampling',
+    topicColor:'#304040',
+    bullets:[
+      '<strong>Population</strong>: everyone you want to draw conclusions about; <strong>Sample</strong>: the subset actually observed',
+      '<strong>Simple Random Sample (SRS)</strong>: every individual in the population has an equal chance of selection',
+      '<strong>Stratified random sample</strong>: divide population into subgroups (strata), then take SRS from each stratum',
+      '<strong>Multistage sampling</strong>: sample in multiple stages (e.g. random regions → random cities → random households)',
+      '<strong>Voluntary response sample</strong> (biased!): people self-select to participate — those with strong opinions over-represented'
+    ],
+    hook:'📌 <em>Population = the whole cake. Sample = the slice you taste. Stratified = you make sure to taste all layers.</em>',
+    exam:'Voluntary response surveys are biased because people with extreme views are more likely to respond. The sample is systematically different from the population.',
+    svg:`<svg viewBox="0 0 700 390" xmlns="http://www.w3.org/2000/svg">
+  <!-- Tree diagram of sampling types -->
+  <text x="350" y="28" text-anchor="middle" class="svg-title">Sampling Methods</text>
+
+  <!-- Root: Population -->
+  <rect x="270" y="45" width="160" height="50" rx="10" fill="#1e1c18" stroke="#c9a96e" stroke-width="1.5"/>
+  <text x="350" y="68" text-anchor="middle" class="svg-gold" font-size="14">POPULATION</text>
+  <text x="350" y="84" text-anchor="middle" class="svg-note" style="fill:#6a6055">Everyone you want to study</text>
+
+  <!-- Branch: Probability vs Non-probability -->
+  <line x1="350" y1="95" x2="190" y2="130" stroke="#3a3820" stroke-width="1"/>
+  <line x1="350" y1="95" x2="510" y2="130" stroke="#3a3820" stroke-width="1"/>
+
+  <rect x="110" y="130" width="160" height="38" rx="8" fill="#1e2018" stroke="#4a6448" stroke-width="1"/>
+  <text x="190" y="150" text-anchor="middle" style="font-family:'DM Sans';font-size:11px;fill:#6e9c6e">Probability Sampling</text>
+  <text x="190" y="162" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#4a7055">uses known probability</text>
+
+  <rect x="430" y="130" width="160" height="38" rx="8" fill="#1e1818" stroke="#604848" stroke-width="1"/>
+  <text x="510" y="150" text-anchor="middle" style="font-family:'DM Sans';font-size:11px;fill:#c96e6e">Non-Probability</text>
+  <text x="510" y="162" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#7a4a4a">selection bias risk</text>
+
+  <!-- Probability branches -->
+  <line x1="155" y1="168" x2="80" y2="210" stroke="#3a4830" stroke-width="1"/>
+  <line x1="190" y1="168" x2="190" y2="210" stroke="#3a4830" stroke-width="1"/>
+  <line x1="225" y1="168" x2="305" y2="210" stroke="#3a4830" stroke-width="1"/>
+
+  <!-- SRS -->
+  <rect x="30" y="210" width="130" height="80" rx="8" fill="#1a2018" stroke="#4a6448" stroke-width="1"/>
+  <text x="95" y="232" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:13px;fill:#6e9c6e;font-weight:600">SRS</text>
+  <text x="95" y="250" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#8aaa8a">Every individual</text>
+  <text x="95" y="263" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#8aaa8a">equal chance</text>
+  <text x="95" y="280" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#4a7055">Random digits table</text>
+
+  <!-- Stratified -->
+  <rect x="125" y="210" width="130" height="80" rx="8" fill="#1a2018" stroke="#4a6448" stroke-width="1"/>
+  <text x="190" y="232" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:13px;fill:#6e9c6e;font-weight:600">Stratified</text>
+  <text x="190" y="250" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#8aaa8a">Split into strata</text>
+  <text x="190" y="263" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#8aaa8a">SRS from each</text>
+  <text x="190" y="280" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#4a7055">e.g. dept. by dept.</text>
+
+  <!-- Multistage -->
+  <rect x="265" y="210" width="130" height="80" rx="8" fill="#1a2018" stroke="#4a6448" stroke-width="1"/>
+  <text x="330" y="232" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:13px;fill:#6e9c6e;font-weight:600">Multistage</text>
+  <text x="330" y="250" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#8aaa8a">Sample in stages</text>
+  <text x="330" y="263" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#8aaa8a">regions → cities</text>
+  <text x="330" y="280" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#4a7055">→ households</text>
+
+  <!-- Voluntary Response -->
+  <rect x="435" y="210" width="150" height="80" rx="8" fill="#1e1818" stroke="#604848" stroke-width="1"/>
+  <text x="510" y="232" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:13px;fill:#c96e6e;font-weight:600">Voluntary</text>
+  <text x="510" y="248" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:13px;fill:#c96e6e;font-weight:600">Response</text>
+  <text x="510" y="266" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a07070">Self-select to join</text>
+  <text x="510" y="280" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a07070">Strong opinions</text>
+  <text x="510" y="293" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#7a4a4a">over-represented!</text>
+
+  <line x1="510" y1="168" x2="510" y2="208" stroke="#604848" stroke-width="1"/>
+
+  <!-- Bottom comparison row -->
+  <rect x="30" y="320" width="640" height="55" rx="8" fill="#181614" stroke="#2a2820" stroke-width="1"/>
+  <text x="350" y="342" text-anchor="middle" class="svg-gold" font-size="12">Key Distinctions</text>
+  <text x="100" y="362" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">SRS: purest form</text>
+  <text x="240" y="362" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">Stratified: sub-groups</text>
+  <text x="390" y="362" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">Multi: practical</text>
+  <text x="560" y="362" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c96e6e">Voluntary: BIASED</text>
+</svg>`
+  },
+  {
+    id:8, num:'09',
+    title:'Data Sources',
+    subtitle:'Anecdotal · Available · Observational · Survey',
+    topic:'Data & Surveys',
+    topicColor:'#3a3050',
+    bullets:[
+      '<strong>Anecdotal data</strong>: personal stories, individual experiences — persuasive but NOT statistically reliable (unknown sample size, selection bias)',
+      '<strong>Available data (secondary data)</strong>: already collected for another purpose — you use it but you didn\'t design the collection',
+      '<strong>Observational research</strong>: observe & measure without manipulating — correlation, NOT causation',
+      'Types of observational: case studies, surveys, naturalistic observation — each with unique strengths/weaknesses',
+      '<strong>Everyday examples</strong>: hospital records for disease, census data, school grades for educational trends, company HR data'
+    ],
+    hook:'📌 <em>"I saw it once" = anecdotal. "It exists in a dataset" = available data. Neither replaces designed experimental research.</em>',
+    exam:'Anecdotal data feels convincing because it comes from real people — but it cannot generalize. It may notice a pattern worth studying but cannot confirm causation.',
+    svg:`<svg viewBox="0 0 700 380" xmlns="http://www.w3.org/2000/svg">
+  <text x="350" y="28" text-anchor="middle" class="svg-title">Data Source Classification</text>
+
+  <!-- Three columns -->
+  <!-- Anecdotal -->
+  <rect x="20" y="45" width="195" height="300" rx="12" fill="#1c1818" stroke="#704848" stroke-width="1.5"/>
+  <text x="118" y="72" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:15px;fill:#c96e6e;font-weight:600">Anecdotal</text>
+  <line x1="35" y1="82" x2="200" y2="82" stroke="#3a2828" stroke-width="1"/>
+  <text x="118" y="104" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">Personal stories &amp;</text>
+  <text x="118" y="118" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">individual cases</text>
+  <!-- Quote bubble -->
+  <rect x="36" y="130" width="162" height="55" rx="8" fill="#1a1515" stroke="#4a2828" stroke-width="1"/>
+  <text x="117" y="151" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#c96e6e;font-style:italic">"I saw it once so</text>
+  <text x="117" y="165" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#c96e6e;font-style:italic">it must be true"</text>
+  <text x="117" y="178" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#7a4a4a">→ NOT statistically valid</text>
+  <text x="36" y="210" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">⚠ Selection bias</text>
+  <text x="36" y="226" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">⚠ Unknown sample size</text>
+  <text x="36" y="242" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">⚠ No comparison</text>
+  <text x="36" y="268" style="font-family:'DM Sans';font-size:9px;fill:#5a5045">e.g. "My neighbor got</text>
+  <text x="36" y="282" style="font-family:'DM Sans';font-size:9px;fill:#5a5045">ill after the vaccine"</text>
+  <text x="36" y="310" style="font-family:'DM Sans';font-size:9px;fill:#a07070">Useful to: generate</text>
+  <text x="36" y="324" style="font-family:'DM Sans';font-size:9px;fill:#a07070">hypotheses only</text>
+
+  <!-- Available -->
+  <rect x="253" y="45" width="195" height="300" rx="12" fill="#181c1c" stroke="#486070" stroke-width="1.5"/>
+  <text x="350" y="72" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:15px;fill:#6ea8c9;font-weight:600">Available / Secondary</text>
+  <line x1="268" y1="82" x2="433" y2="82" stroke="#283a42" stroke-width="1"/>
+  <text x="350" y="104" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">Existing data collected</text>
+  <text x="350" y="118" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">for another purpose</text>
+  <rect x="268" y="130" width="163" height="40" rx="6" fill="#182028" stroke="#2a4050" stroke-width="1"/>
+  <text x="350" y="147" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6ea8c9">The data exists — you</text>
+  <text x="350" y="161" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6ea8c9">didn't design collection</text>
+  <text x="268" y="192" style="font-family:'DM Sans';font-size:9px;fill:#4a7080">Examples:</text>
+  <text x="268" y="208" style="font-family:'DM Sans';font-size:9px;fill:#6a8090">• Hospital records</text>
+  <text x="268" y="222" style="font-family:'DM Sans';font-size:9px;fill:#6a8090">• Government census</text>
+  <text x="268" y="236" style="font-family:'DM Sans';font-size:9px;fill:#6a8090">• Company HR data</text>
+  <text x="268" y="250" style="font-family:'DM Sans';font-size:9px;fill:#6a8090">• School grades</text>
+  <text x="268" y="280" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">⚠ May not be exactly</text>
+  <text x="268" y="294" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">  what you want</text>
+  <text x="268" y="308" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">⚠ Possible missing data</text>
+  <text x="268" y="322" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">⚠ Biased collection possible</text>
+
+  <!-- Observational/Survey -->
+  <rect x="486" y="45" width="195" height="300" rx="12" fill="#1a1c18" stroke="#4a6448" stroke-width="1.5"/>
+  <text x="583" y="72" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:15px;fill:#6e9c6e;font-weight:600">Observational</text>
+  <line x1="502" y1="82" x2="666" y2="82" stroke="#3a4828" stroke-width="1"/>
+  <text x="583" y="104" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">Watch &amp; measure</text>
+  <text x="583" y="118" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">without manipulating</text>
+  <rect x="502" y="130" width="163" height="40" rx="6" fill="#182018" stroke="#3a4828" stroke-width="1"/>
+  <text x="583" y="148" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6e9c6e">Correlation only —</text>
+  <text x="583" y="162" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6e9c6e">NOT causation!</text>
+  <text x="502" y="194" style="font-family:'DM Sans';font-size:9px;fill:#4a7055">Types:</text>
+  <text x="502" y="210" style="font-family:'DM Sans';font-size:9px;fill:#6a9070">• Case studies</text>
+  <text x="502" y="224" style="font-family:'DM Sans';font-size:9px;fill:#6a9070">• Sample surveys</text>
+  <text x="502" y="238" style="font-family:'DM Sans';font-size:9px;fill:#6a9070">• Naturalistic obs.</text>
+  <text x="502" y="266" style="font-family:'DM Sans';font-size:9px;fill:#6e9c6e">✓ Real people</text>
+  <text x="502" y="280" style="font-family:'DM Sans';font-size:9px;fill:#6e9c6e">✓ Ecological validity</text>
+  <text x="502" y="304" style="font-family:'DM Sans';font-size:9px;fill:#c96e6e">✗ No causal claims</text>
+  <text x="502" y="318" style="font-family:'DM Sans';font-size:9px;fill:#c96e6e">✗ Can't control vars</text>
+</svg>`
+  },
+  {
+    id:9, num:'10',
+    title:'Survey Bias & Question Design',
+    subtitle:'Response bias · Wording · Non-response',
+    topic:'Data & Surveys',
+    topicColor:'#3a3050',
+    bullets:[
+      '<strong>Response bias</strong>: respondents give inaccurate answers — due to embarrassment, social desirability, fear of judgment',
+      '<strong>Question wording bias</strong>: even small changes in phrasing, tone, or order significantly change responses',
+      '<strong>Leading questions</strong>: phrasing suggests a "right" answer (e.g. "You agree the vaccine is dangerous, right?")',
+      '<strong>Double-barreled questions</strong>: ask two things at once — impossible to answer cleanly',
+      '<strong>Non-response</strong>: certain groups systematically fail to respond, making the sample unrepresentative'
+    ],
+    hook:'📌 <em>Survey bias = garbage in, garbage out. Even the most beautiful analysis cannot fix a flawed question.</em>',
+    exam:'Examples of response bias: underreporting drug/alcohol use, overreporting exercise frequency, lying about income. Sensitive topics are especially prone.',
+    svg:`<svg viewBox="0 0 700 390" xmlns="http://www.w3.org/2000/svg">
+  <text x="350" y="28" text-anchor="middle" class="svg-title">Types of Survey Bias</text>
+
+  <!-- Central survey box -->
+  <rect x="260" y="50" width="180" height="80" rx="10" fill="#1e1c18" stroke="#c9a96e" stroke-width="1.5"/>
+  <text x="350" y="80" text-anchor="middle" class="svg-gold" font-size="14">Survey /</text>
+  <text x="350" y="98" text-anchor="middle" class="svg-gold" font-size="14">Questionnaire</text>
+  <text x="350" y="118" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">data collection tool</text>
+
+  <!-- Response Bias - left top -->
+  <rect x="20" y="50" width="180" height="100" rx="10" fill="#1e1518" stroke="#c96e6e" stroke-width="1.5"/>
+  <text x="110" y="75" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:14px;fill:#e89090;font-weight:600">Response Bias</text>
+  <text x="110" y="95" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a07070">People lie / distort answers</text>
+  <text x="110" y="110" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a07070">to seem socially desirable</text>
+  <text x="110" y="126" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#6a4a4a">e.g. drug use, income,</text>
+  <text x="110" y="138" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#6a4a4a">exercise frequency</text>
+  <line x1="200" y1="90" x2="258" y2="80" stroke="#c96e6e" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Leading Questions - right top -->
+  <rect x="500" y="50" width="180" height="100" rx="10" fill="#1e1518" stroke="#c96e6e" stroke-width="1.5"/>
+  <text x="590" y="75" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:14px;fill:#e89090;font-weight:600">Leading Questions</text>
+  <text x="590" y="95" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a07070">Suggests the "correct"</text>
+  <text x="590" y="110" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a07070">answer in the phrasing</text>
+  <rect x="512" y="118" width="156" height="22" rx="4" fill="#1a1212" stroke="#4a2828" stroke-width="1"/>
+  <text x="590" y="133" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#c96e6e;font-style:italic">"Don't you agree that…?"</text>
+  <line x1="500" y1="90" x2="442" y2="80" stroke="#c96e6e" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Double-barreled - left bottom -->
+  <rect x="20" y="240" width="180" height="100" rx="10" fill="#1e1518" stroke="#c96e6e" stroke-width="1.5"/>
+  <text x="110" y="265" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:14px;fill:#e89090;font-weight:600">Double-Barreled</text>
+  <text x="110" y="285" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a07070">Two questions in one —</text>
+  <text x="110" y="300" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a07070">impossible to answer cleanly</text>
+  <rect x="32" y="308" width="156" height="24" rx="4" fill="#1a1212" stroke="#4a2828" stroke-width="1"/>
+  <text x="110" y="323" text-anchor="middle" style="font-family:'DM Sans';font-size:7px;fill:#c96e6e;font-style:italic">"Rate safety &amp; convenience of route"</text>
+  <line x1="200" y1="285" x2="258" y2="200" stroke="#c96e6e" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Non-response bias - right bottom -->
+  <rect x="500" y="240" width="180" height="100" rx="10" fill="#1e1518" stroke="#c96e6e" stroke-width="1.5"/>
+  <text x="590" y="265" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:14px;fill:#e89090;font-weight:600">Non-Response</text>
+  <text x="590" y="285" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a07070">Groups systematically</text>
+  <text x="590" y="300" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a07070">fail to respond</text>
+  <text x="590" y="318" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#6a4a4a">e.g. online surveys</text>
+  <text x="590" y="330" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#6a4a4a">exclude non-internet users</text>
+  <line x1="500" y1="285" x2="442" y2="200" stroke="#c96e6e" stroke-width="1" stroke-dasharray="4,3"/>
+
+  <!-- Question wording center bottom -->
+  <rect x="230" y="195" width="240" height="70" rx="10" fill="#1e1a18" stroke="#9c8c6e" stroke-width="1.2"/>
+  <text x="350" y="218" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:13px;fill:#c9a96e;font-weight:600">Question Wording Effect</text>
+  <text x="350" y="238" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a09880">Small changes in phrasing → big changes</text>
+  <text x="350" y="252" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a09880">in responses (order, tone, ambiguity)</text>
+
+  <!-- Bottom rule -->
+  <rect x="20" y="355" width="660" height="25" rx="6" fill="#181614"/>
+  <text x="350" y="372" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#6e9c6e">Good survey design: neutral wording · single concept per question · pre-tested · clear instructions</text>
+</svg>`
+  },
+  {
+    id:10, num:'11',
+    title:'Block Design & Matched Pairs',
+    subtitle:'Reducing variability · Blocking strategy',
+    topic:'Advanced Design',
+    topicColor:'#404830',
+    bullets:[
+      '<strong>Block design</strong>: group experimental units into blocks of similar characteristics, then randomize WITHIN each block',
+      '<strong>Matched pairs design</strong>: pair two similar units — one gets treatment A, other gets treatment B; compare within each pair',
+      'Blocking reduces variability by ensuring similar units are distributed across conditions — more sensitive to treatment effects',
+      'Matched pairs is the simplest case of a block design (block size = 2)',
+      '<strong>Matching vs randomization</strong>: matching controls for specific known variables; randomization controls for everything (including unknown)'
+    ],
+    hook:'📌 <em>Blocking = "sort people into similar buckets first, then assign randomly within each bucket."</em>',
+    exam:'Matched pairs advantage: guaranteed equal groups because each pair contains one from each condition. Disadvantage: differences between pairs may be due to group differences, not treatment.',
+    svg:`<svg viewBox="0 0 700 390" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="arr11" markerWidth="8" markerHeight="6" refX="8" refY="3" orient="auto"><polygon points="0 0, 8 3, 0 6" fill="#c9a96e" opacity=".8"/></marker></defs>
+  <text x="350" y="28" text-anchor="middle" class="svg-title">Block Design Strategy</text>
+
+  <!-- Step 1: Unsorted pool -->
+  <rect x="20" y="45" width="130" height="250" rx="10" fill="#1e1c18" stroke="#3a3820" stroke-width="1"/>
+  <text x="85" y="68" text-anchor="middle" class="svg-label" font-size="12">All Units</text>
+  <text x="85" y="88" text-anchor="middle" style="font-size:14px">👤🧓👦</text>
+  <text x="85" y="112" text-anchor="middle" style="font-size:14px">👩🧑🧓</text>
+  <text x="85" y="136" text-anchor="middle" style="font-size:14px">👦👤👩</text>
+  <text x="85" y="168" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">Mixed: different</text>
+  <text x="85" y="182" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">ages, genders,</text>
+  <text x="85" y="196" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6a6055">backgrounds</text>
+
+  <!-- arrow 1 -->
+  <line x1="152" y1="170" x2="188" y2="170" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr11)"/>
+  <text x="170" y="162" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#8a7050">Block by</text>
+  <text x="170" y="175" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#8a7050">similarity</text>
+
+  <!-- Blocks -->
+  <rect x="192" y="45" width="160" height="110" rx="10" fill="#1a2018" stroke="#4a6448" stroke-width="1.5"/>
+  <text x="272" y="68" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:13px;fill:#6e9c6e;font-weight:600">Block 1</text>
+  <text x="272" y="86" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#8aaa8a">Young adults</text>
+  <text x="272" y="104" text-anchor="middle" style="font-size:16px">👦👦👩👩</text>
+  <text x="272" y="130" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#4a7055">All similar within block</text>
+
+  <rect x="192" y="175" width="160" height="110" rx="10" fill="#1a2018" stroke="#4a6448" stroke-width="1.5"/>
+  <text x="272" y="198" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:13px;fill:#6e9c6e;font-weight:600">Block 2</text>
+  <text x="272" y="216" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#8aaa8a">Older adults</text>
+  <text x="272" y="234" text-anchor="middle" style="font-size:16px">🧓🧓🧑🧑</text>
+  <text x="272" y="260" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#4a7055">All similar within block</text>
+
+  <!-- arrow 2 -->
+  <line x1="354" y1="170" x2="388" y2="170" stroke="#c9a96e" stroke-width="1.5" marker-end="url(#arr11)"/>
+  <text x="371" y="162" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#8a7050">Randomize</text>
+  <text x="371" y="175" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#8a7050">within block</text>
+
+  <!-- Within-block assignment -->
+  <rect x="392" y="50" width="285" height="100" rx="10" fill="#1e1c18" stroke="#3a3820" stroke-width="1"/>
+  <text x="534" y="72" text-anchor="middle" class="svg-label" font-size="11">Block 1 Assignment</text>
+  <text x="440" y="95" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6e9c6e">Treatment A</text>
+  <text x="534" y="95" text-anchor="middle" style="font-size:14px">👦👩</text>
+  <text x="628" y="95" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6e8c9c">Treatment B</text>
+  <text x="534" y="115" text-anchor="middle" style="font-size:14px">👦👩</text>
+  <text x="534" y="136" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#4a5045">Random assignment within block</text>
+
+  <rect x="392" y="180" width="285" height="100" rx="10" fill="#1e1c18" stroke="#3a3820" stroke-width="1"/>
+  <text x="534" y="202" text-anchor="middle" class="svg-label" font-size="11">Block 2 Assignment</text>
+  <text x="440" y="226" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6e9c6e">Treatment A</text>
+  <text x="534" y="226" text-anchor="middle" style="font-size:14px">🧓🧑</text>
+  <text x="628" y="226" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#6e8c9c">Treatment B</text>
+  <text x="534" y="248" text-anchor="middle" style="font-size:14px">🧓🧑</text>
+  <text x="534" y="268" text-anchor="middle" style="font-family:'DM Sans';font-size:8px;fill:#4a5045">Random assignment within block</text>
+
+  <!-- Matched pairs note -->
+  <rect x="192" y="305" width="485" height="60" rx="8" fill="#1e1a18" stroke="#5a4830" stroke-width="1"/>
+  <text x="434" y="326" text-anchor="middle" class="svg-gold" font-size="13">Matched Pairs = Special case of Block Design (block size = 2)</text>
+  <text x="434" y="348" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#a09880">Each pair = 1 gets treatment, 1 gets control. Compare within each pair. Pairs are the blocks.</text>
+</svg>`
+  },
+  {
+    id:11, num:'12',
+    title:'Double-Blind Design & Research Ethics',
+    subtitle:'Blinding · Informed consent · IRB',
+    topic:'Ethics & Validity',
+    topicColor:'#304048',
+    bullets:[
+      '<strong>Double-blind</strong>: neither participants NOR researchers know who is in which condition — prevents unconscious bias in administration and outcome measurement',
+      '<strong>Single-blind</strong>: only participants don\'t know their group (researcher knows) — reduces placebo effect but researcher bias possible',
+      '<strong>Informed consent</strong>: all individuals in a study must consent before data is collected — they must understand and agree',
+      '<strong>IRB review</strong>: publicly funded studies must be reviewed by an ethics board to protect subjects from potential harm',
+      '<strong>Weaknesses of experiments</strong>: lack of realism (artificial lab settings may not generalize to real world); noncompliance; experimenter effects'
+    ],
+    hook:'📌 <em>Double-blind = "nobody holds the code." The researcher can\'t treat Group A differently if they don\'t know who Group A is.</em>',
+    exam:'Normal human explanation for why double-blind: "No one who receives the results knows who received what, so expectations cannot bias the outcome."',
+    svg:`<svg viewBox="0 0 700 390" xmlns="http://www.w3.org/2000/svg">
+  <text x="350" y="28" text-anchor="middle" class="svg-title">Double-Blind Design: Who Knows What?</text>
+
+  <!-- Rows of "who knows" -->
+  <!-- Headers -->
+  <rect x="20" y="45" width="200" height="35" rx="6" fill="#242018" stroke="#4a4830" stroke-width="1"/>
+  <text x="120" y="68" text-anchor="middle" class="svg-gold" font-size="13">Design Type</text>
+
+  <rect x="240" y="45" width="200" height="35" rx="6" fill="#1a2018" stroke="#3a5030" stroke-width="1"/>
+  <text x="340" y="68" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:13px;fill:#6e9c6e;font-weight:600">Participant knows?</text>
+
+  <rect x="460" y="45" width="220" height="35" rx="6" fill="#181a20" stroke="#2a4050" stroke-width="1"/>
+  <text x="570" y="68" text-anchor="middle" style="font-family:'Cormorant Garamond';font-size:13px;fill:#6ea8c9;font-weight:600">Researcher knows?</text>
+
+  <!-- Open (no blind) -->
+  <rect x="20" y="88" width="200" height="40" rx="0" fill="#1e1c18" stroke="#3a3820" stroke-width="1"/>
+  <text x="120" y="113" text-anchor="middle" class="svg-label" font-size="12">Open (not blind)</text>
+  <rect x="240" y="88" width="200" height="40" rx="0" fill="#1e1a18" stroke="#3a3820" stroke-width="1"/>
+  <text x="340" y="113" text-anchor="middle" style="font-family:'DM Sans';font-size:13px;fill:#c96e6e">✓ YES</text>
+  <rect x="460" y="88" width="220" height="40" rx="0" fill="#1e1a18" stroke="#3a3820" stroke-width="1"/>
+  <text x="570" y="113" text-anchor="middle" style="font-family:'DM Sans';font-size:13px;fill:#c96e6e">✓ YES</text>
+
+  <!-- Single blind -->
+  <rect x="20" y="130" width="200" height="40" rx="0" fill="#1e1c18" stroke="#3a3820" stroke-width="1"/>
+  <text x="120" y="155" text-anchor="middle" class="svg-label" font-size="12">Single-Blind</text>
+  <rect x="240" y="130" width="200" height="40" rx="0" fill="#1a2018" stroke="#3a3820" stroke-width="1"/>
+  <text x="340" y="155" text-anchor="middle" style="font-family:'DM Sans';font-size:13px;fill:#6e9c6e">✗ NO</text>
+  <rect x="460" y="130" width="220" height="40" rx="0" fill="#1e1a18" stroke="#3a3820" stroke-width="1"/>
+  <text x="570" y="155" text-anchor="middle" style="font-family:'DM Sans';font-size:13px;fill:#c96e6e">✓ YES</text>
+
+  <!-- Double blind -->
+  <rect x="20" y="172" width="200" height="40" rx="0" fill="#242018" stroke="#c9a96e" stroke-width="1.5"/>
+  <text x="120" y="197" text-anchor="middle" class="svg-gold" font-size="13">Double-Blind ★</text>
+  <rect x="240" y="172" width="200" height="40" rx="0" fill="#1a2018" stroke="#c9a96e" stroke-width="1.2"/>
+  <text x="340" y="197" text-anchor="middle" style="font-family:'DM Sans';font-size:13px;fill:#6e9c6e">✗ NO</text>
+  <rect x="460" y="172" width="220" height="40" rx="0" fill="#1a2018" stroke="#c9a96e" stroke-width="1.2"/>
+  <text x="570" y="197" text-anchor="middle" style="font-family:'DM Sans';font-size:13px;fill:#6e9c6e">✗ NO</text>
+
+  <text x="350" y="228" text-anchor="middle" style="font-family:'DM Sans';font-size:10px;fill:#c9a96e">← IDEAL: prevents both placebo effect AND experimenter bias</text>
+
+  <!-- Ethics section -->
+  <rect x="20" y="248" width="660" height="120" rx="10" fill="#181614" stroke="#2a2820" stroke-width="1"/>
+  <text x="350" y="272" text-anchor="middle" class="svg-gold" font-size="14">Research Ethics Requirements</text>
+  <line x1="40" y1="280" x2="660" y2="280" stroke="#2a2820" stroke-width="1"/>
+
+  <!-- 3 ethics pillars -->
+  <rect x="36" y="292" width="185" height="65" rx="8" fill="#1e1c18" stroke="#3a5030" stroke-width="1"/>
+  <text x="128" y="312" text-anchor="middle" style="font-family:'DM Sans';font-size:11px;fill:#6e9c6e">Informed Consent</text>
+  <text x="128" y="328" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a09880">All subjects must agree</text>
+  <text x="128" y="342" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a09880">before data collection</text>
+
+  <rect x="258" y="292" width="185" height="65" rx="8" fill="#1e1c18" stroke="#304050" stroke-width="1"/>
+  <text x="350" y="312" text-anchor="middle" style="font-family:'DM Sans';font-size:11px;fill:#6ea8c9">IRB Review</text>
+  <text x="350" y="328" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a09880">Ethics board reviews</text>
+  <text x="350" y="342" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a09880">publicly funded research</text>
+
+  <rect x="479" y="292" width="185" height="65" rx="8" fill="#1e1c18" stroke="#503028" stroke-width="1"/>
+  <text x="571" y="312" text-anchor="middle" style="font-family:'DM Sans';font-size:11px;fill:#c9a96e">Data Confidentiality</text>
+  <text x="571" y="328" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a09880">Individual data kept</text>
+  <text x="571" y="342" text-anchor="middle" style="font-family:'DM Sans';font-size:9px;fill:#a09880">strictly confidential</text>
+</svg>`
+  }
+];
+
+// ==================== FLASHCARD DATA ====================
+const flashcards = [
+  {q:"What is an experimental unit?", a:"The entity to which a treatment is applied. Called a 'subject' when the unit is human.", topic:"Core Concepts"},
+  {q:"What is a factor in an experiment?", a:"The independent variable that is deliberately manipulated by the researcher (what you change on purpose).", topic:"Core Concepts"},
+  {q:"What are levels of a factor?", a:"The distinct values or categories of the factor. E.g. sleep durations of 6h, 8h = two levels of the factor 'sleep duration'.", topic:"Core Concepts"},
+  {q:"What is a treatment in experimental design?", a:"The specific experimental condition applied to an experimental unit — a combination of factor levels.", topic:"Core Concepts"},
+  {q:"What is an outcome variable?", a:"The dependent variable — what you measure to detect the effect of the treatment. The thing you expect to change.", topic:"Core Concepts"},
+  {q:"What is the placebo effect?", a:"Improvement or change in outcome that occurs simply because participants believe they received treatment — even without active treatment.", topic:"Core Concepts"},
+  {q:"What distinguishes a confounding variable from an extraneous variable?", a:"A confounding variable varies SYSTEMATICALLY with the IV, making it impossible to determine true cause. Extraneous = any uncontrolled variable; confounding = a specific harmful type.", topic:"Core Concepts"},
+  {q:"What does experimental control mean?", a:"Keeping all variables constant except the one being deliberately manipulated (IV), allowing causal attribution of any outcome change.", topic:"Core Concepts"},
+  {q:"What is randomization in experimental design?", a:"Using a chance mechanism (not human choice) to assign experimental units to conditions, ensuring equal probability for every unit.", topic:"Randomization"},
+  {q:"Why is randomization stronger than matching alone?", a:"Randomization balances both KNOWN and UNKNOWN confounding variables. Matching only controls for variables the researcher has identified.", topic:"Randomization"},
+  {q:"What is the random digits table method?", a:"A table containing statistically generated digits (0–9 with equal probability). Number all units, pick a random start, read digits to assign units.", topic:"Randomization"},
+  {q:"What are the 4 statistical principles of experimental design?", a:"1. Compare (2+ conditions) 2. Randomize assignment 3. Repeat on many units 4. Control extraneous variables.", topic:"Design Principles"},
+  {q:"What is a between-subjects design?", a:"Each participant takes part in only ONE experimental condition. Different people are in different groups.", topic:"Research Design"},
+  {q:"What is a within-subjects design?", a:"Each participant takes part in ALL experimental conditions. The same person experiences every treatment.", topic:"Research Design"},
+  {q:"Name 4 types of order effects in within-subjects designs.", a:"1. Practice effect (improves with time) 2. Fatigue effect (worsens with time) 3. Carryover effect (earlier condition bleeds into later) 4. Sensitization (becomes more aware of study purpose).", topic:"Research Design"},
+  {q:"What is counterbalancing and what does it control?", a:"Distributing conditions across all possible orders so that order effects are balanced across conditions on average. Does not eliminate order effects for individuals.", topic:"Research Design"},
+  {q:"What is a simple random sample (SRS)?", a:"A sampling method where every individual in the population has an equal chance of being selected.", topic:"Sampling"},
+  {q:"What is a stratified random sample?", a:"Divide the population into subgroups (strata) based on shared characteristics, then take an SRS from each stratum.", topic:"Sampling"},
+  {q:"What is multistage sampling?", a:"Sampling in multiple stages — e.g. randomly select regions, then cities within regions, then households within cities.", topic:"Sampling"},
+  {q:"Why is voluntary response sampling biased?", a:"People self-select to respond. Those with extreme opinions or strong feelings are much more likely to participate, making the sample unrepresentative.", topic:"Sampling"},
+  {q:"What is the difference between population and sample?", a:"Population = all individuals you want conclusions about. Sample = the subset actually observed and measured.", topic:"Sampling"},
+  {q:"What is anecdotal data and why is it problematic?", a:"Data from personal stories or individual cases. Problematic because of selection bias, unknown sample size, no comparison group, and inability to generalize.", topic:"Data & Surveys"},
+  {q:"What is available/secondary data?", a:"Data that was collected for a different original purpose. You use it, but you did not design the data collection.", topic:"Data & Surveys"},
+  {q:"What is response bias in surveys?", a:"When respondents give inaccurate answers due to social desirability, embarrassment, or fear of judgment (e.g. underreporting drug use).", topic:"Data & Surveys"},
+  {q:"What is a double-barreled question?", a:"A survey question that asks two separate things at once, making it impossible to give a single accurate answer.", topic:"Data & Surveys"},
+  {q:"What is a block design?", a:"Group experimental units into blocks of similar units, then randomize within each block. Reduces variability and controls for block-level differences.", topic:"Advanced Design"},
+  {q:"What is a matched pairs design?", a:"Pair two similar units; one gets Treatment A, the other gets Treatment B. Compare within each pair. It is the simplest case of block design (block size = 2).", topic:"Advanced Design"},
+  {q:"What is a double-blind design?", a:"Neither the participants NOR the researchers know who is in which experimental condition. Prevents both placebo effect and experimenter bias.", topic:"Ethics & Validity"},
+  {q:"What is required by research ethics before data collection?", a:"Informed consent from all subjects, IRB review for publicly funded studies, and data confidentiality protections.", topic:"Ethics & Validity"},
+  {q:"What is the key weakness of laboratory experiments regarding validity?", a:"Lack of ecological realism — artificial settings may not generalize to real-world behavior (low external validity).", topic:"Ethics & Validity"},
+  {q:"What is sensitization as an order effect?", a:"Participants become increasingly aware of the study's purpose over time, changing how they respond — not due to the treatment itself.", topic:"Research Design"},
+  {q:"What distinguishes observational research from experimental research?", a:"Observational research involves no manipulation of variables — researchers only observe and measure. Results show correlation, NOT causation.", topic:"Data & Surveys"}
+];
+
+// ==================== MCQ DATA ====================
+const mcqs = [
+  {
+    q:"A researcher assigns each student a number, uses a random digits table, and assigns the first 30 selected to the treatment group. This is an example of:",
+    opts:["Stratified random sampling","Simple random sampling","Matched pairs design","Voluntary response sampling"],
+    correct:1,
+    exp:"This is Simple Random Sampling — using a random digits table to select units ensures every individual has an equal chance of selection. The same method applied to experiment assignment = simple randomization."
+  },
+  {
+    q:"In an experiment studying memory, participants first learn a word list, then solve math problems. Performance on words is measured before and after math. What role do the math problems play?",
+    opts:["Dependent variable","Extraneous variable","Independent variable / treatment","Experimental unit"],
+    correct:2,
+    exp:"The math problems are the treatment (IV) being applied to participants. They are deliberately manipulated to see if they affect memory (the DV = word recall)."
+  },
+  {
+    q:"A sleep study finds that students who sleep 8 hours score higher on exams than those who sleep 6 hours. Students were not randomly assigned — they chose their own sleep duration. The BIGGEST threat to the conclusion is:",
+    opts:["Practice effect","Confounding variables (e.g. health, study habits)","Fatigue effect","Sampling bias"],
+    correct:1,
+    exp:"Without random assignment, students who choose to sleep 8 hours may differ systematically in many ways (health habits, discipline, stress) — these are confounding variables that could explain the exam score difference, not sleep duration alone."
+  },
+  {
+    q:"Which statement is TRUE about within-subjects designs compared to between-subjects designs?",
+    opts:["Within-subjects designs require more participants","Within-subjects designs can cause order effects but between-subjects cannot","Between-subjects designs always produce more valid results","Within-subjects designs cannot be used with human subjects"],
+    correct:1,
+    exp:"Order effects (practice, fatigue, carryover, sensitization) ONLY occur in within-subjects designs because the same person experiences multiple conditions sequentially. Between-subjects participants each see only one condition."
+  },
+  {
+    q:"A researcher uses counterbalancing in a within-subjects experiment. This means:",
+    opts:["Every participant completes all conditions in the same fixed order","Conditions are distributed across different orders so order effects average out","Individual participants are protected from all order effects","The study is no longer within-subjects"],
+    correct:1,
+    exp:"Counterbalancing distributes conditions across different orders (e.g. half get A→B, half get B→A). This controls for order effects across the group on average — it does NOT eliminate them for individuals."
+  },
+  {
+    q:"Which of the following best defines a confounding variable?",
+    opts:["Any variable measured in the study","An extraneous variable that varies systematically with the IV, making causal attribution impossible","The dependent variable in disguise","A variable the researcher deliberately controls"],
+    correct:1,
+    exp:"A confounding variable is a specific type of extraneous variable — one that systematically varies with the IV. This creates an alternative explanation for any observed change in the DV, destroying causal inference."
+  },
+  {
+    q:"In a double-blind clinical trial, who does NOT know which group participants are in?",
+    opts:["Only the participants","Only the researchers","Both the participants and the researchers","Neither the participants nor the ethics board"],
+    correct:2,
+    exp:"Double-blind means BOTH participants and researchers are unaware of group assignment. This prevents both the placebo effect (participant expectation) and experimenter bias (researcher treating groups differently)."
+  },
+  {
+    q:"A researcher reads in the newspaper: 'A woman who smoked for 60 years lived to 95!' and concludes smoking is not harmful. This is an example of:",
+    opts:["Stratified sampling","Anecdotal evidence","Matched pairs design","A well-controlled experiment"],
+    correct:1,
+    exp:"This is anecdotal evidence — a single personal story. It feels convincing but suffers from selection bias (we don't hear about all the smokers who died young), unknown sample size, and no comparison group."
+  },
+  {
+    q:"Students in a psychology study are divided into groups by year of study (1st, 2nd, 3rd year), then randomly selected from each group. This is:",
+    opts:["Simple random sampling","Voluntary response sampling","Multistage sampling","Stratified random sampling"],
+    correct:3,
+    exp:"Stratified random sampling: the population is divided into strata (year groups), then an SRS is taken from each stratum. This ensures proportional representation of each year group."
+  },
+  {
+    q:"Which of the following is NOT a principle of valid experimental design?",
+    opts:["Compare two or more conditions","Assign all participants to one group for simplicity","Repeat the treatment on many units","Control extraneous variables"],
+    correct:1,
+    exp:"Comparing only one group with no control is NOT a valid design principle — in fact, it violates the COMPARE principle. You need at least two conditions to detect and attribute treatment effects."
+  },
+  {
+    q:"A fatigue effect in a within-subjects study means:",
+    opts:["Performance improves in later conditions due to practice","Performance worsens in later conditions due to tiredness or boredom","Earlier conditions affect responses to later conditions","Participants become more aware of the study's aims"],
+    correct:1,
+    exp:"Fatigue effect = performance WORSENS over time as participants tire or become bored. This is different from the practice effect (improves), carryover (bleeds through), and sensitization (becomes aware)."
+  },
+  {
+    q:"A survey asks: 'Don't you agree that violent video games should be banned to protect our children?' This question demonstrates:",
+    opts:["Response bias due to social desirability","A leading question that biases responses","A double-barreled question","Non-response bias"],
+    correct:1,
+    exp:"This is a leading question — the phrasing 'Don't you agree' and 'protect our children' strongly suggests the expected answer, biasing respondents toward agreement regardless of their true opinion."
+  },
+  {
+    q:"Researchers randomly assigned 100 patients to receive either a new drug or a placebo. Patients did not know which they received. This is an example of:",
+    opts:["Double-blind design","Single-blind design","Matched pairs design","Observational study"],
+    correct:1,
+    exp:"Single-blind: patients don't know their group (reduces placebo effect), but researchers DO know (so researcher bias is still possible). Double-blind would additionally blind the researchers."
+  },
+  {
+    q:"An educational researcher wants to test a new teaching method. She compares her own class (using new method) to another teacher's class (using old method). What is the PRIMARY methodological problem?",
+    opts:["The sample size is too small","Many extraneous variables are confounded with the teaching method (e.g. teacher quality, student differences)","She should have used a survey instead","There is no dependent variable"],
+    correct:1,
+    exp:"Multiple variables are confounded with the teaching method: the two classes may differ in student ability, motivation, teacher quality, time of day, etc. Without random assignment, any observed difference cannot be attributed to the method alone."
+  },
+  {
+    q:"What is the advantage of a matched pairs design over a simple between-subjects design?",
+    opts:["It eliminates all order effects","It guarantees equal groups because each pair contains one unit per condition, controlling for within-pair similarity","It requires no randomization","It can only be used with animals"],
+    correct:1,
+    exp:"Matched pairs ensures each condition is represented within each similar pair, controlling for individual differences at the pair level. Groups are 'guaranteed' to be similar because they're drawn from the same matched pairs."
+  },
+  {
+    q:"A researcher studying stress uses time of day as a controlled variable. This means:",
+    opts:["Time of day is the independent variable","Time of day is measured as an outcome","Time of day is kept constant across conditions so it cannot confound results","Time of day is randomly assigned"],
+    correct:2,
+    exp:"Controlling a variable means keeping it constant so it cannot influence (confound) the results. If all participants are tested at the same time of day, then time of day cannot explain any differences between conditions."
+  },
+  {
+    q:"Which sampling method carries the HIGHEST risk of bias?",
+    opts:["Stratified random sampling","Simple random sampling","Voluntary response sampling","Multistage sampling"],
+    correct:2,
+    exp:"Voluntary response sampling is most biased — people self-select, and those with strong opinions (often extreme) are far more likely to respond, systematically distorting the sample away from the general population."
+  },
+  {
+    q:"In the random digits table method for selecting participants, you must stop:",
+    opts:["After reading the entire table","As soon as you have selected the required number of valid units","When you reach a digit larger than 5","After exactly 100 digits regardless of valid selections"],
+    correct:1,
+    exp:"You stop exactly when you have selected the required sample size. A common exam trap is continuing past this point or stopping too early. Also: skip invalid numbers (those not corresponding to real units)."
+  },
+  {
+    q:"A psychologist studies whether therapy reduces depression by measuring participants before and after 8 weeks of therapy (no control group). The study CANNOT conclude therapy caused improvement because:",
+    opts:["The sample is too large","Without a control group, there is no comparison — improvement could have occurred naturally over time","The DV was measured incorrectly","The therapist was not qualified"],
+    correct:1,
+    exp:"Without a control group (no treatment / placebo), you cannot rule out natural remission, regression to the mean, or other time-based effects. You need a comparison to isolate the therapy's effect."
+  },
+  {
+    q:"According to ethics rules for psychological research, which must happen BEFORE any data is collected from subjects?",
+    opts:["The research must be published first","All subjects must provide informed consent","The researcher must complete the study alone","Participants must be paid"],
+    correct:1,
+    exp:"Informed consent is mandatory BEFORE data collection begins. Subjects must understand what the study involves and agree to participate. This is a fundamental ethical principle required by law for publicly funded research."
+  }
+];
+
+// ==================== BUILD UI ====================
+function buildOverview(){
+  const grid = document.querySelector('.lesson-grid');
+  lessons.forEach((l,i) => {
+    const card = document.createElement('div');
+    card.className = 'lesson-card';
+    card.innerHTML = `
+      <div class="lesson-num">Lesson ${l.num}</div>
+      <h3>${l.title}</h3>
+      <p>${l.subtitle}</p>
+      <span class="topic-badge" style="color:${l.topicColor};border-color:${l.topicColor}">${l.topic}</span>
+      <span class="lesson-arrow">→ Open lesson</span>
+    `;
+    card.onclick = () => { openLesson(i); };
+    grid.appendChild(card);
+  });
+}
+
+function buildLessonNav(){
+  const nav = document.getElementById('lessonNav');
+  const contents = document.getElementById('lessonContents');
+  lessons.forEach((l,i) => {
+    const tab = document.createElement('div');
+    tab.className = 'lesson-tab' + (i===0?' active':'');
+    tab.textContent = `${l.num} ${l.title.split(':')[0] || l.title.split(' ').slice(0,3).join(' ')}`;
+    tab.onclick = () => activateLesson(i);
+    nav.appendChild(tab);
+
+    const content = document.createElement('div');
+    content.className = 'lesson-content' + (i===0?' active':'');
+    content.id = `lesson-${i}`;
+
+    const examHtml = l.exam ? `<div class="exam-flag"><span class="flag-icon">⚠</span><span>${l.exam}</span></div>` : '';
+
+    content.innerHTML = `
+      <div class="lesson-inner">
+        <div class="lesson-diagram">
+          <div class="tag">${l.topic}</div>
+          <h2>${l.title}</h2>
+          ${l.svg}
+        </div>
+        <div class="lesson-sidebar">
+          <div>
+            <h3>Key Concepts</h3>
+            <ul class="bullets">${l.bullets.map(b=>`<li>${b}</li>`).join('')}</ul>
+          </div>
+          ${examHtml}
+          <div class="memory-hook">
+            <div class="label">🧠 Memory Hook</div>
+            <p>${l.hook}</p>
+          </div>
+        </div>
+      </div>
+    `;
+    contents.appendChild(content);
+  });
+}
+
+function activateLesson(idx){
+  document.querySelectorAll('.lesson-tab').forEach((t,i) => t.classList.toggle('active',i===idx));
+  document.querySelectorAll('.lesson-content').forEach((c,i) => c.classList.toggle('active',i===idx));
+}
+
+function openLesson(idx){
+  showPanel('lessons');
+  activateLesson(idx);
+}
+
+// ==================== FLASHCARDS ====================
+const topics = [...new Set(flashcards.map(f=>f.topic))];
+let activeTopics = new Set(topics);
+let cardOrder = flashcards.map((_,i)=>i);
+
+function buildFlashcards(){
+  const filterDiv = document.getElementById('fcFilter');
+  filterDiv.innerHTML = '<span style="font-size:.8rem;color:var(--text3);margin-right:4px">Filter:</span>';
+  ['All', ...topics].forEach(t => {
+    const btn = document.createElement('button');
+    btn.className = 'filter-btn' + (t==='All'?' active':'');
+    btn.textContent = t;
+    btn.dataset.topic = t;
+    btn.onclick = () => {
+      if(t==='All'){
+        activeTopics = new Set(topics);
+        filterDiv.querySelectorAll('.filter-btn').forEach(b => b.classList.toggle('active', b.dataset.topic==='All'));
+      } else {
+        filterDiv.querySelector('[data-topic="All"]').classList.remove('active');
+        if(activeTopics.has(t)){
+          activeTopics.delete(t);
+          btn.classList.remove('active');
+          if(activeTopics.size===0){ activeTopics=new Set(topics); filterDiv.querySelector('[data-topic="All"]').classList.add('active'); }
+        } else {
+          activeTopics.add(t);
+          btn.classList.add('active');
+        }
+      }
+      renderCards();
+    };
+    filterDiv.appendChild(btn);
+  });
+  renderCards();
+}
+
+function renderCards(){
+  const grid = document.getElementById('fcGrid');
+  grid.innerHTML = '';
+  const visible = cardOrder.filter(i => activeTopics.has(flashcards[i].topic));
+  document.getElementById('fcCounter').textContent = `Showing ${visible.length} card${visible.length!==1?'s':''} of ${flashcards.length}`;
+  visible.forEach(i => {
+    const f = flashcards[i];
+    const wrap = document.createElement('div');
+    wrap.className = 'fc-wrap';
+    wrap.innerHTML = `
+      <div class="fc-inner">
+        <div class="fc-front"><div class="fc-topic">${f.topic}</div><p>${f.q}</p></div>
+        <div class="fc-back"><div class="fc-topic" style="color:var(--gold)">${f.topic}</div><p>${f.a}</p></div>
+      </div>`;
+    wrap.onclick = () => wrap.classList.toggle('flipped');
+    grid.appendChild(wrap);
+  });
+}
+
+function shuffleCards(){
+  for(let i=cardOrder.length-1;i>0;i--){
+    const j=Math.floor(Math.random()*(i+1));
+    [cardOrder[i],cardOrder[j]]=[cardOrder[j],cardOrder[i]];
+  }
+  document.querySelectorAll('.fc-wrap').forEach(w=>w.classList.remove('flipped'));
+  renderCards();
+}
+
+function resetCards(){
+  cardOrder = flashcards.map((_,i)=>i);
+  document.querySelectorAll('.fc-wrap').forEach(w=>w.classList.remove('flipped'));
+  renderCards();
+}
+
+// ==================== MCQ ====================
+let currentQ = 0;
+let score = 0;
+let answers = new Array(mcqs.length).fill(null);
+
+function buildMCQ(){ renderMCQ(); }
+
+function renderMCQ(){
+  const prog = document.getElementById('mcqProgress');
+  prog.innerHTML = '';
+  mcqs.forEach((_,i) => {
+    const dot = document.createElement('div');
+    dot.className = 'prog-dot' + (answers[i]===null?'':(answers[i]===mcqs[i].correct?' correct':' wrong')) + (i===currentQ?' current':'');
+    dot.onclick = () => { currentQ=i; renderMCQ(); };
+    prog.appendChild(dot);
+  });
+
+  const area = document.getElementById('mcqArea');
+  const q = mcqs[currentQ];
+  const answered = answers[currentQ] !== null;
+
+  area.innerHTML = `
+    <div class="mcq-card">
+      <div class="mcq-num">Question ${currentQ+1} of ${mcqs.length}</div>
+      <div class="mcq-q">${q.q}</div>
+      <div class="mcq-options">
+        ${q.opts.map((opt,i) => {
+          let cls = '';
+          if(answered){
+            if(i===q.correct) cls=' show-correct';
+            if(i===answers[currentQ] && answers[currentQ]!==q.correct) cls=' wrong';
+          }
+          return `<div class="mcq-opt${cls}" ${!answered?`onclick="selectAnswer(${i})"`:''}><div class="opt-letter">${'ABCD'[i]}</div><div class="opt-text">${opt}</div></div>`;
+        }).join('')}
+      </div>
+      <div class="mcq-feedback ${answered?(answers[currentQ]===q.correct?'correct-fb':'wrong-fb'):''} ${answered?'show':''}">
+        ${answered?(answers[currentQ]===q.correct?'✓ Correct! ':'✗ Incorrect. ')+q.exp:''}
+      </div>
+      <div class="mcq-nav">
+        ${currentQ>0?`<button class="btn" onclick="prevQ()">← Prev</button>`:''}
+        ${currentQ<mcqs.length-1?`<button class="btn btn-primary" onclick="nextQ()">Next →</button>`:answered?`<button class="btn btn-primary" onclick="finishMCQ()">See Results</button>`:''}
+      </div>
+    </div>`;
+}
+
+function selectAnswer(idx){
+  if(answers[currentQ]!==null) return;
+  answers[currentQ]=idx;
+  if(idx===mcqs[currentQ].correct) score++;
+  renderMCQ();
+}
+function nextQ(){ if(currentQ<mcqs.length-1){ currentQ++; renderMCQ(); } }
+function prevQ(){ if(currentQ>0){ currentQ--; renderMCQ(); } }
+function finishMCQ(){
+  document.getElementById('mcqArea').style.display='none';
+  document.getElementById('mcqProgress').style.display='none';
+  const sc = document.getElementById('mcqScore');
+  sc.style.display='block';
+  document.getElementById('scoreFinal').textContent = `${score} / ${mcqs.length}`;
+}
+function restartMCQ(){
+  currentQ=0; score=0; answers=new Array(mcqs.length).fill(null);
+  document.getElementById('mcqArea').style.display='';
+  document.getElementById('mcqProgress').style.display='';
+  document.getElementById('mcqScore').style.display='none';
+  renderMCQ();
+}
+
+// ==================== NAVIGATION ====================
+function showPanel(name){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById(name).classList.add('active');
+  document.querySelectorAll('.nav-item').forEach(n=>{ if(n.textContent.trim().toLowerCase().startsWith(name.substring(0,4))) n.classList.add('active'); });
+}
+
+// ==================== INIT ====================
+buildOverview();
+buildLessonNav();
+buildFlashcards();
+buildMCQ();
+</script>
+</body>
+</html>
